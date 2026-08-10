@@ -1,0 +1,14 @@
+import type { Badge } from '../types'
+
+export const BADGES: Badge[] = [
+  { id: 'badge-first-discovery', nameMn: 'НЭЭЛТ', nameEn: 'First Discovery', icon: '✨', description: 'Scanned your very first GER NAADGAI collectible.' },
+  { id: 'badge-five-treasures', nameMn: 'ТАВАН ХОШУУ МАЛ', nameEn: 'Five Treasures', icon: '🐎', description: 'Collected all Five Treasures of Mongolia.' },
+  { id: 'badge-story-keeper', nameMn: 'ҮЛГЭРИЙН ХҮН', nameEn: 'Story Keeper', icon: '📖', description: 'Completed your first story.' },
+  { id: 'badge-game-master', nameMn: 'ТОГЛООМЫН МАСТЕР', nameEn: 'Game Master', icon: '🏆', description: 'Completed 5 mini-games.' },
+  { id: 'badge-year-keeper', nameMn: 'ЖИЛИЙН ЭЗЭН', nameEn: 'Year Keeper', icon: '🐑', description: 'Collected the 2027 annual zodiac special edition.' },
+  { id: 'badge-journey', nameMn: '12 ЖИЛИЙН АЯЛАГЧ', nameEn: '12-Year Journey', icon: '🌟', description: 'Complete the entire zodiac cycle across 12 years.' },
+]
+
+export function getBadge(id: string) {
+  return BADGES.find((b) => b.id === id)
+}

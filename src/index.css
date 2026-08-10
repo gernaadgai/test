@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ===== GER NAADGAI brand palette (refined) ===== */
+  --color-cream: #faf8f1;
+  --color-cream-dark: #eeece4;
+  --color-paper: #fefdfa;
+
+  --color-forest: #183f35;
+  --color-forest-light: #275a4d;
+  --color-forest-dark: #0e2921;
+
+  --color-terracotta: #c45a3c;
+  --color-terracotta-light: #d97d5c;
+  --color-terracotta-dark: #9c4128;
+
+  --color-orange: #d8893d;
+  --color-orange-light: #e8ab6e;
+
+  --color-sky: #527d8a;
+  --color-sky-light: #86a8b2;
+
+  --color-gold: #c5a04a;
+  --color-gold-light: #dbbd78;
+
+  --color-ink: #202723;
+  --color-ink-soft: #55605a;
+
+  --font-display: 'Montserrat', ui-sans-serif, sans-serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+
+  --shadow-card: 0 8px 24px -8px rgba(24, 63, 53, 0.25), 0 2px 6px -2px rgba(24, 63, 53, 0.15);
+  --shadow-pop: 0 14px 34px -10px rgba(24, 63, 53, 0.35);
+
+  --animate-float: float 4.5s ease-in-out infinite;
+  --animate-drift: drift 30s linear infinite;
+  --animate-twinkle: twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* app shell: phone-frame feel on desktop, full width on mobile */
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+  background: var(--color-cream);
+  overflow-x: hidden;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.mn-script {
+  font-family: 'Noto Sans Mongolian', var(--font-body);
+  opacity: 0.5;
+}
