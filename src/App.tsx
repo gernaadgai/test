@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { NavigationBar } from './components/NavigationBar'
+import { HeroWorld } from './components/HeroWorld'
 import { HomeScreen } from './screens/HomeScreen'
 import { CollectionScreen } from './screens/CollectionScreen'
 import { CharacterDetailScreen } from './screens/CharacterDetailScreen'
@@ -66,13 +68,28 @@ function AnimatedRoutes() {
   )
 }
 
+const HERO_SEEN_KEY = 'ger-naadgai-entered'
+
 function App() {
+  const [entered, setEntered] = useState(() => sessionStorage.getItem(HERO_SEEN_KEY) === '1')
+
   return (
     <MotionConfig reducedMotion="user">
       <HashRouter>
         <div className="app-shell">
           <AnimatedRoutes />
         </div>
+        <AnimatePresence>
+          {!entered && (
+            <HeroWorld
+              key="hero"
+              onEnter={() => {
+                sessionStorage.setItem(HERO_SEEN_KEY, '1')
+                setEntered(true)
+              }}
+            />
+          )}
+        </AnimatePresence>
       </HashRouter>
     </MotionConfig>
   )
