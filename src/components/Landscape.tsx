@@ -6,11 +6,11 @@ interface Props {
 }
 
 const PALETTES: Record<LandscapeVariant, { sky: [string, string]; far: string; near: string; ground: string; accent: string }> = {
-  steppe: { sky: ['#86A8B2', '#FAF8F1'], far: '#86A8B2', near: '#275A4D', ground: '#C5A04A', accent: '#DBBD78' },
-  gobi: { sky: ['#E8AB6E', '#FAF8F1'], far: '#D97D5C', near: '#C45A3C', ground: '#C5A04A', accent: '#FEFDFA' },
-  altai: { sky: ['#527D8A', '#E6EEE9'], far: '#86A8B2', near: '#183F35', ground: '#275A4D', accent: '#FEFDFA' },
-  night: { sky: ['#0E2921', '#275A4D'], far: '#183F35', near: '#0E2921', ground: '#183F35', accent: '#C5A04A' },
-  winter: { sky: ['#527D8A', '#E6EEE9'], far: '#86A8B2', near: '#FEFDFA', ground: '#E6EEE9', accent: '#D97D5C' },
+  steppe: { sky: ['#8FD8F2', '#FBF3E1'], far: '#8FD8F2', near: '#8FBF72', ground: '#E8B85C', accent: '#F3D48F' },
+  gobi: { sky: ['#EFC589', '#FBF3E1'], far: '#C97056', near: '#A94B35', ground: '#E8B85C', accent: '#FFFCF4' },
+  altai: { sky: ['#5B96B0', '#E2F0E8'], far: '#8FD8F2', near: '#4C7A3A', ground: '#8FBF72', accent: '#FFFCF4' },
+  night: { sky: ['#33532A', '#8FBF72'], far: '#4C7A3A', near: '#33532A', ground: '#4C7A3A', accent: '#E8B85C' },
+  winter: { sky: ['#5B96B0', '#E2F0E8'], far: '#8FD8F2', near: '#FFFCF4', ground: '#E2F0E8', accent: '#C97056' },
 }
 
 /** A reusable illustrated Mongolian landscape backdrop — background/midground/light layers, swappable by variant. */
@@ -43,7 +43,7 @@ export function Landscape({ variant, className }: Props) {
       {/* stars */}
       {isNight &&
         [...Array(14)].map((_, i) => (
-          <circle key={i} cx={(i * 37 + 20) % 380 + 10} cy={(i * 23) % 90 + 10} r={i % 3 === 0 ? 1.6 : 1} fill="#FAF8F1" opacity={0.6 + (i % 3) * 0.1} />
+          <circle key={i} cx={(i * 37 + 20) % 380 + 10} cy={(i * 23) % 90 + 10} r={i % 3 === 0 ? 1.6 : 1} fill="#FBF3E1" opacity={0.6 + (i % 3) * 0.1} />
         ))}
 
       {/* far ridge */}
@@ -63,19 +63,19 @@ export function Landscape({ variant, className }: Props) {
       <rect x="0" y="185" width="400" height="35" fill={p.ground} opacity={isWinter ? 0.5 : 0.3} />
 
       {isWinter &&
-        [...Array(10)].map((_, i) => <circle key={i} cx={(i * 41 + 15) % 400} cy={130 + (i % 5) * 14} r="1.6" fill="#FEFDFA" opacity="0.8" />)}
+        [...Array(10)].map((_, i) => <circle key={i} cx={(i * 41 + 15) % 400} cy={130 + (i % 5) * 14} r="1.6" fill="#FFFCF4" opacity="0.8" />)}
 
       {isGobi && (
         <g opacity="0.7">
-          <path d="M60 200 Q64 180 60 165 M60 200 Q66 188 74 182" stroke="#9C4128" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M330 205 Q334 188 330 175 M330 205 Q336 195 342 190" stroke="#9C4128" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M60 200 Q64 180 60 165 M60 200 Q66 188 74 182" stroke="#7C3A26" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M330 205 Q334 188 330 175 M330 205 Q336 195 342 190" stroke="#7C3A26" strokeWidth="2" fill="none" strokeLinecap="round" />
         </g>
       )}
 
       {/* small ger silhouette for scale + story */}
       <g transform="translate(200,196)" opacity="0.9">
-        <path d="M-14 2 L0 -14 L14 2 Z" fill={isNight ? '#0d1e17' : '#9C4128'} />
-        <rect x="-16" y="2" width="32" height="12" fill={isNight ? '#0d1e17' : '#183F35'} opacity="0.9" />
+        <path d="M-14 2 L0 -14 L14 2 Z" fill={isNight ? '#0d1e17' : '#7C3A26'} />
+        <rect x="-16" y="2" width="32" height="12" fill={isNight ? '#0d1e17' : '#4C7A3A'} opacity="0.9" />
       </g>
     </svg>
   )

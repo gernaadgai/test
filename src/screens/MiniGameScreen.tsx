@@ -5,6 +5,8 @@ import { X, Star } from 'lucide-react'
 import { getGame } from '../data/games'
 import { getCharacter } from '../data/characters'
 import { AnimalIcon } from '../components/AnimalIcon'
+import { CharacterBuddy } from '../components/CharacterBuddy'
+import { ConfettiBurst } from '../components/ConfettiBurst'
 import { getBadge } from '../data/badges'
 import { useCollectionStore, isGameUnlocked } from '../store/useCollectionStore'
 import { sound } from '../lib/sound'
@@ -85,6 +87,14 @@ export function MiniGameScreen() {
   }
 
   const stars = hits >= game.goal ? 3 : hits >= game.goal * 0.6 ? 2 : 1
+  const resultBuddyState = stars === 3 ? 'celebrating' : stars === 2 ? 'happy' : 'thinking'
+  const resultTitle = stars === 3 ? 'Мундаг байна! ⭐' : stars === 2 ? 'Сайн байна!' : 'Бараг боллоо!'
+  const resultSub =
+    stars === 3
+      ? `${character?.nameMn}-тэй хамт ${hits} оноо цуглууллаа!`
+      : stars === 2
+        ? `${character?.nameMn}-тэй ${hits} оноо авлаа. Гоё байна!`
+        : `${hits} оноо авлаа. Дахин оролдоод, илүү сайжруулаарай!`
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: `${game.accent}0d` }}>
@@ -101,8 +111,8 @@ export function MiniGameScreen() {
       {phase === 'ready' && (
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
           {character && (
-            <div className="w-28 h-28 rounded-full flex items-center justify-center" style={{ backgroundColor: `${game.accent}22` }}>
-              <AnimalIcon animal={character.animal} className="w-20 h-20" lineColor={game.accent} bodyColor="#FEFDFA" />
+            <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ backgroundColor: `${game.accent}22` }}>
+              <CharacterBuddy animal={character.animal} state="idle" size={104} lineColor={game.accent} />
             </div>
           )}
           <p className="text-sm font-medium text-ink-soft/70">{game.descriptionMn}</p>
@@ -136,7 +146,7 @@ export function MiniGameScreen() {
                   className="absolute w-14 h-14 rounded-full flex items-center justify-center shadow-md"
                   style={{ left: `${t.x}%`, top: `${t.y}%`, backgroundColor: `${game.accent}cc` }}
                 >
-                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FEFDFA" bodyColor={game.accent} />}
+                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FFFCF4" bodyColor={game.accent} />}
                 </motion.button>
               ))}
             </AnimatePresence>
@@ -145,14 +155,27 @@ export function MiniGameScreen() {
       )}
 
       {phase === 'result' && (
-        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
+        <div className="relative flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
+          {stars === 3 && <ConfettiBurst colors={[game.accent, '#E8B85C', '#FFFCF4']} />}
+          {character && (
+            <div className="w-24 h-24 rounded-full flex items-center justify-center mb-1" style={{ backgroundColor: `${game.accent}22` }}>
+              <CharacterBuddy animal={character.animal} state={resultBuddyState} size={80} lineColor={game.accent} />
+            </div>
+          )}
           <div className="flex gap-1">
             {[1, 2, 3].map((n) => (
-              <Star key={n} size={28} className={n <= stars ? 'text-gold fill-gold' : 'text-ink-soft/20'} />
+              <motion.span
+                key={n}
+                initial={{ scale: 0, rotate: -30 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.15 + n * 0.1, type: 'spring', stiffness: 260, damping: 14 }}
+              >
+                <Star size={28} className={n <= stars ? 'text-gold fill-gold' : 'text-ink-soft/20'} />
+              </motion.span>
             ))}
           </div>
-          <h2 className="font-display font-extrabold text-xl text-forest">Сайн байна!</h2>
-          <p className="text-sm font-medium text-ink-soft/70">{character?.nameMn}-тэй {hits} оноо авлаа.</p>
+          <h2 className="font-display font-extrabold text-xl text-forest">{resultTitle}</h2>
+          <p className="text-sm font-medium text-ink-soft/70">{resultSub}</p>
 
           {newBadges.length > 0 && (
             <div className="flex gap-3 mt-2">

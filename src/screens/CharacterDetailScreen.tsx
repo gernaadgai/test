@@ -1,7 +1,7 @@
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { Sparkles, Gamepad2, BookOpen } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
-import { AnimalIcon } from '../components/AnimalIcon'
+import { CharacterBuddy } from '../components/CharacterBuddy'
 import { getCharacter } from '../data/characters'
 import { getCollection } from '../data/collections'
 import { useCollectionStore, isStoryUnlocked } from '../store/useCollectionStore'
@@ -30,7 +30,7 @@ export function CharacterDetailScreen() {
           style={{ background: `${character.accent}14` }}
         >
           <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ backgroundColor: `${character.accent}22` }}>
-            <AnimalIcon animal={character.animal} className="w-24 h-24" bodyColor="#FEFDFA" lineColor={character.accent} />
+            <CharacterBuddy animal={character.animal} state="happy" size={104} lineColor={character.accent} />
           </div>
           <h2 className="font-display font-extrabold text-2xl mt-2" style={{ color: character.accent }}>
             {character.nameMn}

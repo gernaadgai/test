@@ -11,7 +11,7 @@ interface Props {
  * Hand-drawn-style flat glyphs for each collectible species.
  * Single consistent stroke language so the whole roster reads as one world.
  */
-export function AnimalIcon({ animal, className, bodyColor = '#FAF8F1', lineColor = '#183F35' }: Props) {
+export function AnimalIcon({ animal, className, bodyColor = '#FBF3E1', lineColor = '#4C7A3A' }: Props) {
   const s = { fill: bodyColor, stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const line = { fill: 'none', stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
 

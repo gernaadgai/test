@@ -8,7 +8,7 @@ export const COLLECTIONS: Collection[] = [
     subtitle: 'Үндсэн цуглуулга',
     description:
       'The five animals that have carried Mongolian nomadic life for thousands of years. Collect all five to unlock the secret of the steppe.',
-    accent: '#183F35',
+    accent: '#4C7A3A',
     characterIds: ['horse', 'camel', 'sheep', 'goat', 'cow'],
     completionReward: {
       titleMn: 'ТАВАН ХОШУУ МАЛ',
@@ -26,7 +26,7 @@ export const COLLECTIONS: Collection[] = [
     subtitle: 'Жил тутмын хязгаарлагдмал хэвлэл',
     description:
       'The first chapter of the 12-Year Journey. A rare, once-a-year collection that only appears in 2027.',
-    accent: '#D97D5C',
+    accent: '#C97056',
     characterIds: ['sheep-2027'],
     completionReward: {
       titleMn: 'ХОНЬ ЖИЛИЙН ЭЗЭН',

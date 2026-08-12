@@ -27,10 +27,10 @@ export function StoriesScreen() {
             >
               <div
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${unlocked ? '' : 'grayscale opacity-40'}`}
-                style={{ backgroundColor: unlocked ? `${story.accent}1f` : '#e8e0cc' }}
+                style={{ backgroundColor: unlocked ? `${story.accent}1f` : '#E4D9BE' }}
               >
                 {character ? (
-                  <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={story.accent} bodyColor="#FAF8F1" />
+                  <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={story.accent} bodyColor="#FBF3E1" />
                 ) : (
                   <BookOpen size={22} style={{ color: unlocked ? story.accent : undefined }} className={unlocked ? '' : 'text-ink-soft/40'} />
                 )}

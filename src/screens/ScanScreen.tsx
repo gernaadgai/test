@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { X, ScanLine, PartyPopper, Sparkles, Check, ChevronRight } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { AnimalIcon } from '../components/AnimalIcon'
+import { CharacterBuddy } from '../components/CharacterBuddy'
 import { ConfettiBurst } from '../components/ConfettiBurst'
 import { CHARACTERS } from '../data/characters'
 import { getCollection } from '../data/collections'
@@ -120,7 +121,7 @@ export function ScanScreen() {
                     targetId === c.id ? 'border-terracotta bg-terracotta/10' : 'border-forest/10 bg-paper'
                   }`}
                 >
-                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FAF8F1" />
+                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FBF3E1" />
                   <span className="text-[10px] font-bold text-center leading-tight">{c.nameMn}</span>
                 </button>
               ))}
@@ -158,9 +159,9 @@ export function ScanScreen() {
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 18 }}
             className="relative rounded-[28px] overflow-hidden border-2"
-            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FEFDFA 55%)` }}
+            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFCF4 55%)` }}
           >
-            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#C5A04A', '#FEFDFA']} />}
+            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E8B85C', '#FFFCF4']} />}
 
             <div className="flex items-center justify-between px-6 pt-5">
               <span className="font-display font-extrabold text-xs tracking-wide text-forest">GER NAADGAI</span>
@@ -195,7 +196,12 @@ export function ScanScreen() {
                 className="w-32 h-32 rounded-full flex items-center justify-center my-4 border-4"
                 style={{ backgroundColor: `${character.accent}22`, borderColor: `${character.accent}30` }}
               >
-                <AnimalIcon animal={character.animal} className="w-24 h-24" lineColor={character.accent} bodyColor="#FEFDFA" />
+                <CharacterBuddy
+                  animal={character.animal}
+                  state={discovered || duplicateAdded ? 'celebrating' : isDuplicateRun ? 'idle' : 'excited'}
+                  size={104}
+                  lineColor={character.accent}
+                />
               </motion.div>
               <h2 className="font-display font-extrabold text-2xl" style={{ color: character.accent }}>{character.nameMn}</h2>
               <p className="text-xs text-ink-soft/50">{character.nameEn}</p>
@@ -318,12 +324,12 @@ function CompletionCelebration({ collectionId, onDone }: { collectionId: string;
       <div className="w-full flex flex-col gap-3 mt-6">
         <ShareButton
           variant="solid"
-          accent="#C45A3C"
+          accent="#A94B35"
           label="Амжилтаа Хуваалц"
           config={
             {
               kind: 'collection-complete',
-              accent: '#C45A3C',
+              accent: '#A94B35',
               badgeMn: 'Цуглуулга бүрдлээ',
               titleMn: collection.completionReward.titleMn,
               titleEn: collection.completionReward.titleEn,

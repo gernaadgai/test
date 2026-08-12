@@ -39,7 +39,7 @@ export function JourneyScreen() {
                   }`}
                 >
                   {isActive || isCollected ? (
-                    <AnimalIcon animal={z.animal} className="w-8 h-8" lineColor={isActive ? '#C45A3C' : '#183F35'} bodyColor="#FAF8F1" />
+                    <AnimalIcon animal={z.animal} className="w-8 h-8" lineColor={isActive ? '#A94B35' : '#4C7A3A'} bodyColor="#FBF3E1" />
                   ) : (
                     <Lock size={18} className="text-ink-soft/30" />
                   )}
@@ -58,7 +58,7 @@ export function JourneyScreen() {
                       <span className="text-[9px] font-bold uppercase tracking-wide text-ink-soft/40">Удахгүй</span>
                     )}
                   </div>
-                  <p className="font-display font-extrabold text-sm mt-0.5" style={{ color: isActive ? '#C45A3C' : undefined }}>
+                  <p className="font-display font-extrabold text-sm mt-0.5" style={{ color: isActive ? '#A94B35' : undefined }}>
                     {isActive || isCollected ? z.animalMn : '???'}
                   </p>
                   <p className="text-[10.5px] text-ink-soft/40">{isActive || isCollected ? z.animalEn : ''}</p>
@@ -78,12 +78,12 @@ export function JourneyScreen() {
       <div className="px-5 mt-6 mb-6">
         <ShareButton
           variant="outline"
-          accent="#183F35"
+          accent="#4C7A3A"
           label="Аяллаа Хуваалц"
           config={
             {
               kind: 'journey',
-              accent: '#183F35',
+              accent: '#4C7A3A',
               animal: 'sheep',
               badgeMn: 'Миний Аялал',
               titleMn: `${journeyProgress} / 12 ЖИЛ`,

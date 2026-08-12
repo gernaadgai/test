@@ -60,7 +60,7 @@ export function HomeScreen() {
         <Link
           to="/journey"
           className="block rounded-3xl p-5 relative overflow-hidden shadow-[var(--shadow-pop)]"
-          style={{ background: 'linear-gradient(135deg,#D97D5C,#C45A3C)' }}
+          style={{ background: 'linear-gradient(135deg,#C97056,#A94B35)' }}
         >
           <div className="relative z-10 text-cream">
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] opacity-80">{year.year} · Хязгаарлагдмал</p>
@@ -78,7 +78,7 @@ export function HomeScreen() {
       {/* five treasures progress */}
       <div className="px-5 mt-4">
         <Link to="/collection" className="flex items-center gap-4 rounded-3xl bg-paper border border-forest/10 shadow-[var(--shadow-card)] p-4">
-          <ProgressRing progress={five.collected / five.total} color="#183F35">
+          <ProgressRing progress={five.collected / five.total} color="#4C7A3A">
             <span className="font-display font-extrabold text-sm text-forest">
               {five.collected}/{five.total}
             </span>

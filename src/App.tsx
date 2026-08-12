@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { NavigationBar } from './components/NavigationBar'
 import { HomeScreen } from './screens/HomeScreen'
 import { CollectionScreen } from './screens/CollectionScreen'
@@ -68,11 +68,13 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <HashRouter>
-      <div className="app-shell">
-        <AnimatedRoutes />
-      </div>
-    </HashRouter>
+    <MotionConfig reducedMotion="user">
+      <HashRouter>
+        <div className="app-shell">
+          <AnimatedRoutes />
+        </div>
+      </HashRouter>
+    </MotionConfig>
   )
 }
 

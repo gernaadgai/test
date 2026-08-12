@@ -7,7 +7,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export function ProgressRing({ progress, size = 56, stroke = 6, color = '#C45A3C', track = 'rgba(31,68,56,0.12)', children }: Props) {
+export function ProgressRing({ progress, size = 56, stroke = 6, color = '#A94B35', track = 'rgba(31,68,56,0.12)', children }: Props) {
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
   const offset = c * (1 - Math.min(1, Math.max(0, progress)))

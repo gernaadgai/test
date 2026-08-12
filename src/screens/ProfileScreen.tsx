@@ -79,14 +79,14 @@ export function ProfileScreen() {
       </div>
 
       <div className="px-5 mt-5 grid grid-cols-3 gap-3">
-        <StatCard ring={unlockedIds.length / total} labelMn="Цуглуулга" labelEn="Collection" value={`${unlockedIds.length}/${total}`} color="#183F35" />
-        <StatCard ring={five.collected / five.total} labelMn="Таван Хошуу" labelEn="Five Treasures" value={`${five.collected}/${five.total}`} color="#C45A3C" />
-        <StatCard ring={sheep2027.collected / sheep2027.total} labelMn="2027 Хонь" labelEn="2027 Sheep" value={`${sheep2027.collected}/${sheep2027.total}`} color="#D97D5C" />
+        <StatCard ring={unlockedIds.length / total} labelMn="Цуглуулга" labelEn="Collection" value={`${unlockedIds.length}/${total}`} color="#4C7A3A" />
+        <StatCard ring={five.collected / five.total} labelMn="Таван Хошуу" labelEn="Five Treasures" value={`${five.collected}/${five.total}`} color="#A94B35" />
+        <StatCard ring={sheep2027.collected / sheep2027.total} labelMn="2027 Хонь" labelEn="2027 Sheep" value={`${sheep2027.collected}/${sheep2027.total}`} color="#C97056" />
       </div>
 
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
-        <StatCard ring={completedStoryIds.length / STORIES.length} labelMn="Үлгэр" labelEn="Stories" value={`${completedStoryIds.length}/${STORIES.length}`} color="#527D8A" />
-        <StatCard ring={Math.min(1, completedGameIds.length / 5)} labelMn="Тоглосон" labelEn="Games Played" value={`${completedGameIds.length}`} color="#C5A04A" />
+        <StatCard ring={completedStoryIds.length / STORIES.length} labelMn="Үлгэр" labelEn="Stories" value={`${completedStoryIds.length}/${STORIES.length}`} color="#5B96B0" />
+        <StatCard ring={Math.min(1, completedGameIds.length / 5)} labelMn="Тоглосон" labelEn="Games Played" value={`${completedGameIds.length}`} color="#E8B85C" />
       </div>
 
       <div className="px-5 mt-6 mb-6">
