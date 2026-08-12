@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Lock, Sparkles } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { AnimalIcon } from '../components/AnimalIcon'
+import { SceneBackdrop } from '../components/SceneBackdrop'
 import { ZODIAC_CYCLE } from '../data/zodiac'
 import { useCollectionStore } from '../store/useCollectionStore'
 import { ShareButton } from '../components/ShareButton'
@@ -12,14 +13,20 @@ export function JourneyScreen() {
   const journeyProgress = ZODIAC_CYCLE.filter((z) => z.characterId && unlockedIds.includes(z.characterId)).length
 
   return (
-    <div>
-      <ScreenHeader titleMn="12 Жилийн Аялал" titleEn="12-Year Journey" />
+    <div className="relative">
+      <div className="absolute inset-x-0 top-0 h-64 overflow-hidden opacity-70">
+        <SceneBackdrop />
+      </div>
 
-      <div className="px-5 mb-5">
-        <div className="rounded-3xl p-5 bg-forest text-cream text-center">
-          <Sparkles size={22} className="mx-auto mb-1.5 text-gold" />
-          <p className="font-display font-extrabold text-base">Аялал чинь эндээс эхэллээ.</p>
-          <p className="text-xs opacity-75 mt-1">12 жил. 12 амьтан. Нэг Монгол түүх.</p>
+      <div className="relative z-10">
+        <ScreenHeader titleMn="12 Жилийн Аялал" titleEn="12-Year Journey" />
+
+        <div className="px-5 mb-5">
+          <div className="rounded-3xl p-5 bg-forest text-cream text-center">
+            <Sparkles size={22} className="mx-auto mb-1.5 text-gold" />
+            <p className="font-display font-extrabold text-base">Аялал чинь эндээс эхэллээ.</p>
+            <p className="text-xs opacity-75 mt-1">12 жил. 12 амьтан. Нэг Монгол түүх.</p>
+          </div>
         </div>
       </div>
 

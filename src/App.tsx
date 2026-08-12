@@ -8,6 +8,7 @@ import { CollectionScreen } from './screens/CollectionScreen'
 import { CharacterDetailScreen } from './screens/CharacterDetailScreen'
 import { PlayScreen } from './screens/PlayScreen'
 import { MiniGameScreen } from './screens/MiniGameScreen'
+import { QuizScreen } from './screens/QuizScreen'
 import { StoriesScreen } from './screens/StoriesScreen'
 import { StoryReaderScreen } from './screens/StoryReaderScreen'
 import { JourneyScreen } from './screens/JourneyScreen'
@@ -45,6 +46,7 @@ function AnimatedRoutes() {
             <Route path="/collection" element={<CollectionScreen />} />
             <Route path="/collection/:id" element={<CharacterDetailScreen />} />
             <Route path="/play" element={<PlayScreen />} />
+            <Route path="/play/quiz" element={<QuizScreen />} />
             <Route path="/play/:id" element={<MiniGameScreen />} />
             <Route path="/stories" element={<StoriesScreen />} />
             <Route path="/stories/:id" element={<StoryReaderScreen />} />

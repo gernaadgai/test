@@ -143,6 +143,7 @@ function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
       <SunGlow cx={330} cy={90} r={46} reduceMotion={reduceMotion} />
       <g transform={p(4)}>
         <BirdFlock reduceMotion={reduceMotion} originX={60} originY={130} scale={0.8} />
+        <EagleGlyph reduceMotion={reduceMotion} originX={230} originY={70} />
       </g>
       <g transform={p(8)}>
         <CloudGlyph cx={80} cy={110} scale={1} reduceMotion={reduceMotion} duration={26} range={14} />
@@ -176,6 +177,13 @@ function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
         <HorseGlyph reduceMotion={reduceMotion} />
       </g>
 
+      <g transform="translate(330,500) scale(0.8)">
+        <SheepGlyph />
+      </g>
+      <g transform="translate(352,514) scale(0.65)">
+        <SheepGlyph />
+      </g>
+
       <ForegroundBand y={560} width={400} reduceMotion={reduceMotion} />
     </svg>
   )
@@ -190,6 +198,7 @@ function DesktopScene({ phase, parallax, reduceMotion }: SceneProps) {
       <SunGlow cx={1030} cy={110} r={64} reduceMotion={reduceMotion} />
       <g transform={p(6)}>
         <BirdFlock reduceMotion={reduceMotion} originX={220} originY={140} scale={1} />
+        <EagleGlyph reduceMotion={reduceMotion} originX={720} originY={80} />
       </g>
       <g transform={p(10)}>
         <CloudGlyph cx={190} cy={120} scale={1.3} reduceMotion={reduceMotion} duration={30} range={22} />
@@ -222,6 +231,16 @@ function DesktopScene({ phase, parallax, reduceMotion }: SceneProps) {
 
       <g transform="translate(870,470) scale(1.3) scale(-1,1) translate(-110,0)">
         <HorseGlyph reduceMotion={reduceMotion} />
+      </g>
+
+      <g transform="translate(300,510) scale(1)">
+        <SheepGlyph />
+      </g>
+      <g transform="translate(330,528) scale(0.8)">
+        <SheepGlyph />
+      </g>
+      <g transform="translate(268,524) scale(0.7)">
+        <SheepGlyph />
       </g>
 
       <ForegroundBand y={560} width={1200} reduceMotion={reduceMotion} />
@@ -287,6 +306,40 @@ function BirdFlock({ originX, originY, scale, reduceMotion }: { originX: number;
         <path d="M18 8 Q22 3 26 8 Q30 3 34 8" stroke="var(--color-ink-soft)" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.75" />
       </g>
     </motion.g>
+  )
+}
+
+/** A soaring eagle, drifting in a slow lazy circle high above the steppe. */
+function EagleGlyph({ originX, originY, reduceMotion }: { originX: number; originY: number; reduceMotion: boolean }) {
+  return (
+    <motion.g
+      transform={`translate(${originX},${originY})`}
+      animate={reduceMotion ? undefined : { x: [0, 26, 0, -26, 0], y: [0, -8, 0, 8, 0] }}
+      transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <path d="M0 0 Q-16 -7 -30 3 Q-15 -1 0 5 Q15 -1 30 3 Q16 -7 0 0 Z" fill="var(--color-ink)" opacity="0.5" />
+    </motion.g>
+  )
+}
+
+/** A small grazing sheep — drawn in a local ~32x20 box, base at y≈13. */
+function SheepGlyph() {
+  const dots: Array<[number, number]> = [
+    [-9, -6],
+    [0, -8],
+    [9, -6],
+    [-5, 3],
+    [6, 3],
+  ]
+  return (
+    <g>
+      <ellipse cx="0" cy="-1" rx="14" ry="9" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="1.6" />
+      {dots.map(([dx, dy], i) => (
+        <circle key={i} cx={dx} cy={dy} r="5.2" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="1.1" />
+      ))}
+      <ellipse cx="-16" cy="-3" rx="4.2" ry="3.4" fill="var(--color-ink)" opacity="0.85" />
+      <path d="M-6 8 L-6 13 M6 8 L6 13" stroke="var(--color-ink)" strokeWidth="1.8" strokeLinecap="round" />
+    </g>
   )
 }
 

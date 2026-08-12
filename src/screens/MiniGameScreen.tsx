@@ -9,6 +9,7 @@ import { CharacterBuddy } from '../components/CharacterBuddy'
 import { ConfettiBurst } from '../components/ConfettiBurst'
 import { SceneBackdrop } from '../components/SceneBackdrop'
 import { ShagaiIcon } from '../components/ShagaiIcon'
+import { ShagaiReward } from '../components/ShagaiReward'
 import { getBadge } from '../data/badges'
 import { useCollectionStore, isGameUnlocked } from '../store/useCollectionStore'
 import { sound } from '../lib/sound'
@@ -183,24 +184,7 @@ export function MiniGameScreen() {
           <h2 className="font-display font-extrabold text-xl text-forest">{resultTitle}</h2>
           <p className="text-sm font-medium text-ink-soft/70">{resultSub}</p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.4 }}
-            className="flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2"
-          >
-            {Array.from({ length: Math.min(stars, 3) }).map((_, i) => (
-              <motion.span
-                key={i}
-                initial={{ scale: 0, rotate: -60, y: -14 }}
-                animate={{ scale: 1, rotate: 0, y: 0 }}
-                transition={{ delay: 0.7 + i * 0.15, type: 'spring', stiffness: 260, damping: 12 }}
-              >
-                <ShagaiIcon size={22} />
-              </motion.span>
-            ))}
-            <span className="font-display font-extrabold text-sm text-ink">+{stars} ШАГАЙ</span>
-          </motion.div>
+          <ShagaiReward count={stars} />
 
           {newBadges.length > 0 && (
             <div className="flex gap-3 mt-2">
