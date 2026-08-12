@@ -7,6 +7,8 @@ import { getCharacter } from '../data/characters'
 import { AnimalIcon } from '../components/AnimalIcon'
 import { CharacterBuddy } from '../components/CharacterBuddy'
 import { ConfettiBurst } from '../components/ConfettiBurst'
+import { SceneBackdrop } from '../components/SceneBackdrop'
+import { ShagaiIcon } from '../components/ShagaiIcon'
 import { getBadge } from '../data/badges'
 import { useCollectionStore, isGameUnlocked } from '../store/useCollectionStore'
 import { sound } from '../lib/sound'
@@ -97,8 +99,10 @@ export function MiniGameScreen() {
         : `${hits} оноо авлаа. Дахин оролдоод, илүү сайжруулаарай!`
 
   return (
-    <div className="min-h-dvh flex flex-col" style={{ background: `${game.accent}0d` }}>
-      <div className="flex items-center justify-between px-5 pt-6">
+    <div className="relative min-h-dvh flex flex-col overflow-hidden" style={{ background: 'var(--color-cream)' }}>
+      <SceneBackdrop tint={`${game.accent}33`} />
+
+      <div className="relative z-10 flex items-center justify-between px-5 pt-6">
         <div>
           <p className="font-display font-extrabold text-base" style={{ color: game.accent }}>{game.nameMn}</p>
           <p className="text-[10.5px] text-ink-soft/45">{game.nameEn}</p>
@@ -109,7 +113,7 @@ export function MiniGameScreen() {
       </div>
 
       {phase === 'ready' && (
-        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
           {character && (
             <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ backgroundColor: `${game.accent}22` }}>
               <CharacterBuddy animal={character.animal} state="idle" size={104} lineColor={game.accent} />
@@ -129,12 +133,14 @@ export function MiniGameScreen() {
       )}
 
       {phase === 'playing' && (
-        <div className="flex-1 flex flex-col px-5">
+        <div className="relative z-10 flex-1 flex flex-col px-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-display font-extrabold text-sm" style={{ color: game.accent }}>Оноо: {hits}</span>
+            <span className="flex items-center gap-1.5 font-display font-extrabold text-sm" style={{ color: game.accent }}>
+              <ShagaiIcon size={18} /> {hits}
+            </span>
             <span className="font-display font-extrabold text-sm text-ink-soft/60">{timeLeft}с</span>
           </div>
-          <div className="relative flex-1 rounded-3xl border-2 border-dashed overflow-hidden" style={{ borderColor: `${game.accent}44`, minHeight: 320 }}>
+          <div className="relative flex-1 rounded-3xl border-2 border-dashed overflow-hidden bg-paper/40" style={{ borderColor: `${game.accent}44`, minHeight: 320 }}>
             <AnimatePresence>
               {targets.map((t) => (
                 <motion.button
@@ -146,7 +152,7 @@ export function MiniGameScreen() {
                   className="absolute w-14 h-14 rounded-full flex items-center justify-center shadow-md"
                   style={{ left: `${t.x}%`, top: `${t.y}%`, backgroundColor: `${game.accent}cc` }}
                 >
-                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FFFCF4" bodyColor={game.accent} />}
+                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FFFEFA" bodyColor={game.accent} />}
                 </motion.button>
               ))}
             </AnimatePresence>
@@ -155,8 +161,8 @@ export function MiniGameScreen() {
       )}
 
       {phase === 'result' && (
-        <div className="relative flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
-          {stars === 3 && <ConfettiBurst colors={[game.accent, '#E8B85C', '#FFFCF4']} />}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
+          {stars === 3 && <ConfettiBurst colors={[game.accent, '#E7B85C', '#FFFEFA']} />}
           {character && (
             <div className="w-24 h-24 rounded-full flex items-center justify-center mb-1" style={{ backgroundColor: `${game.accent}22` }}>
               <CharacterBuddy animal={character.animal} state={resultBuddyState} size={80} lineColor={game.accent} />
@@ -176,6 +182,25 @@ export function MiniGameScreen() {
           </div>
           <h2 className="font-display font-extrabold text-xl text-forest">{resultTitle}</h2>
           <p className="text-sm font-medium text-ink-soft/70">{resultSub}</p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2"
+          >
+            {Array.from({ length: Math.min(stars, 3) }).map((_, i) => (
+              <motion.span
+                key={i}
+                initial={{ scale: 0, rotate: -60, y: -14 }}
+                animate={{ scale: 1, rotate: 0, y: 0 }}
+                transition={{ delay: 0.7 + i * 0.15, type: 'spring', stiffness: 260, damping: 12 }}
+              >
+                <ShagaiIcon size={22} />
+              </motion.span>
+            ))}
+            <span className="font-display font-extrabold text-sm text-ink">+{stars} ШАГАЙ</span>
+          </motion.div>
 
           {newBadges.length > 0 && (
             <div className="flex gap-3 mt-2">

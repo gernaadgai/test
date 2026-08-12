@@ -36,7 +36,7 @@ const WRAPPER_MOTION: Record<BuddyState, { animate: TargetAndTransition; transit
  * collectible animal wears at emotionally important moments (unlock, mini-game result).
  * Identity comes from ear silhouette + brand color; the face carries the emotion.
  */
-export function CharacterBuddy({ animal, state = 'idle', size = 120, bodyColor = '#FFFCF4', lineColor = '#4C7A3A', className }: Props) {
+export function CharacterBuddy({ animal, state = 'idle', size = 120, bodyColor = '#FFFEFA', lineColor = '#5C7C3E', className }: Props) {
   const prefersReducedMotion = useReducedMotion()
   const ears = EAR_SHAPES[animal] ?? 'round'
   const motionProps = prefersReducedMotion
@@ -134,7 +134,7 @@ function Sparkles({ lineColor }: { lineColor: string }) {
         <motion.path
           key={i}
           d={`M${x} ${y - 6} L${x + 2} ${y} L${x + 8} ${y} L${x + 2.5} ${y + 3.5} L${x + 4.5} ${y + 10} L${x} ${y + 5.5} L${x - 4.5} ${y + 10} L${x - 2.5} ${y + 3.5} L${x - 8} ${y} L${x - 2} ${y} Z`}
-          fill="#E8B85C"
+          fill="#E7B85C"
           stroke={lineColor}
           strokeWidth="1"
           strokeLinejoin="round"

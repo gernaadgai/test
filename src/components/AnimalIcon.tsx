@@ -5,13 +5,16 @@ interface Props {
   className?: string
   bodyColor?: string
   lineColor?: string
+  /** Explicit pixel size — use when nesting inside another <svg> (e.g. GerScene), where
+   *  CSS width/height on a nested svg viewport is unreliable across browsers. */
+  size?: number
 }
 
 /**
  * Hand-drawn-style flat glyphs for each collectible species.
  * Single consistent stroke language so the whole roster reads as one world.
  */
-export function AnimalIcon({ animal, className, bodyColor = '#FBF3E1', lineColor = '#4C7A3A' }: Props) {
+export function AnimalIcon({ animal, className, bodyColor = '#FFF9ED', lineColor = '#5C7C3E', size }: Props) {
   const s = { fill: bodyColor, stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const line = { fill: 'none', stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
 
@@ -170,7 +173,7 @@ export function AnimalIcon({ animal, className, bodyColor = '#FBF3E1', lineColor
   }
 
   return (
-    <svg viewBox="0 0 92 92" className={className} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 92 92" width={size} height={size} className={className} xmlns="http://www.w3.org/2000/svg">
       {paths[animal]}
     </svg>
   )

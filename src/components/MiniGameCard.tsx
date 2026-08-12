@@ -17,7 +17,7 @@ export function MiniGameCard({ game, unlocked, completed }: { game: MiniGame; un
         className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${unlocked ? '' : 'grayscale opacity-40'}`}
         style={{ backgroundColor: unlocked ? `${game.accent}1f` : '#E4D9BE' }}
       >
-        {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={game.accent} bodyColor="#FBF3E1" />}
+        {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={game.accent} bodyColor="#FFF9ED" />}
       </div>
       <div className="flex-1 min-w-0">
         <p className={`font-display font-extrabold text-sm ${unlocked ? 'text-ink' : 'text-ink-soft/40'}`}>{game.nameMn}</p>

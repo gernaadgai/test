@@ -6,7 +6,7 @@ export const STORIES: Story[] = [
     titleMn: 'АДУУНЫ ХҮЧ',
     titleEn: 'The Spirit of the Horse',
     characterId: 'horse',
-    accent: '#A94B35',
+    accent: '#B85C45',
     pages: [
       { text: 'Under a wide open sky, a young herder named Baatar had a horse named Zeel.', caption: 'The steppe, at dawn' },
       { text: 'Zeel could run faster than the wind, carrying Baatar across rivers and hills to find the lost sheep.' },
@@ -20,7 +20,7 @@ export const STORIES: Story[] = [
     titleMn: 'ТЭМЭЭНИЙ АЯЛАЛ',
     titleEn: 'The Camel\'s Long Walk',
     characterId: 'camel',
-    accent: '#E8B85C',
+    accent: '#E7B85C',
     pages: [
       { text: 'Deep in the Gobi, a caravan of camels carried families and their gers from one grazing ground to another.', caption: 'The Gobi desert' },
       { text: 'The lead camel, Sartuul, knew the old paths by heart — paths his grandparents had walked, too.' },
@@ -34,7 +34,7 @@ export const STORIES: Story[] = [
     titleMn: 'ХОНИНЫ ДУЛААН',
     titleEn: 'The Gift of Warmth',
     characterId: 'sheep',
-    accent: '#5B96B0',
+    accent: '#6DB8D4',
     pages: [
       { text: 'Winter was coming, and little Sarnai worried her family\'s ger would be too cold.', caption: 'Autumn on the steppe' },
       { text: 'Her grandmother smiled and led the sheep herd home, their wool thick and soft after a summer of grazing.' },
@@ -48,7 +48,7 @@ export const STORIES: Story[] = [
     titleMn: 'ЯМААНЫ ЗОРИГ',
     titleEn: 'The Bravest Climber',
     characterId: 'goat',
-    accent: '#8FBF72',
+    accent: '#9DBB72',
     pages: [
       { text: 'High on a rocky mountainside, a small goat named Zolboo loved to climb where no other animal dared.', caption: 'The mountains' },
       { text: 'One day, the tastiest herbs grew on a ledge so narrow the other goats turned back.' },
@@ -62,7 +62,7 @@ export const STORIES: Story[] = [
     titleMn: 'ҮХЭРИЙН ӨГӨӨМӨР ЗҮРХ',
     titleEn: 'A Generous Heart',
     characterId: 'cow',
-    accent: '#7C3A26',
+    accent: '#8E4432',
     pages: [
       { text: 'Every morning, a gentle cow named Sarlag waited patiently by the ger for milking time.', caption: 'Early morning' },
       { text: 'Her milk became warm suutei tsai for breakfast, and creamy butter for the whole family.' },
@@ -76,7 +76,7 @@ export const STORIES: Story[] = [
     titleMn: '2027 ХОНЬ ЖИЛИЙН ЭЗЭН',
     titleEn: 'The Keeper of 2027',
     characterId: 'sheep-2027',
-    accent: '#C97056',
+    accent: '#D2836F',
     pages: [
       { text: 'Once every twelve years, a new guardian steps forward to lead Mongolia\'s zodiac cycle.', caption: 'The 12-Year Journey' },
       { text: 'In 2027, that guardian is the Sheep — gentle, patient, and a symbol of harmony and good fortune.' },
@@ -89,7 +89,7 @@ export const STORIES: Story[] = [
     id: 'story-erkhii-mergen',
     titleMn: 'ЭРХИЙ МЭРГЭН',
     titleEn: 'Erkhii Mergen, the Thumb Archer',
-    accent: '#4C7A3A',
+    accent: '#5C7C3E',
     requiredCollectionId: 'five-treasures',
     pages: [
       { text: 'Long ago, the sky held not one sun, but seven — and the world burned under their fierce light.', caption: 'A Mongolian legend' },

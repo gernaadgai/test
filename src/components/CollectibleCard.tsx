@@ -38,7 +38,7 @@ export function CollectibleCard({ character, unlocked }: Props) {
         style={{ backgroundColor: unlocked ? `${character.accent}1f` : '#E4D9BE' }}
       >
         {unlocked ? (
-          <AnimalIcon animal={character.animal} className="w-11 h-11" bodyColor="#FBF3E1" lineColor={character.accent} />
+          <AnimalIcon animal={character.animal} className="w-11 h-11" bodyColor="#FFF9ED" lineColor={character.accent} />
         ) : (
           <Lock size={22} className="text-ink-soft/40" />
         )}

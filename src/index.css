@@ -2,40 +2,44 @@
 
 @theme {
   /* ===== GER NAADGAI brand palette (refined) ===== */
-  --color-cream: #fbf3e1;
-  --color-cream-dark: #f3e4c3;
-  --color-paper: #fffcf4;
+  --color-cream: #fff9ed;
+  --color-cream-dark: #f4e5c6;
+  --color-paper: #fffefa;
 
-  --color-forest: #4c7a3a;
-  --color-forest-light: #8fbf72;
-  --color-forest-dark: #33532a;
+  --color-forest: #5c7c3e;
+  --color-forest-light: #9dbb72;
+  --color-forest-dark: #3e5629;
 
-  --color-terracotta: #a94b35;
-  --color-terracotta-light: #c97056;
-  --color-terracotta-dark: #7c3a26;
+  --color-terracotta: #b85c45;
+  --color-terracotta-light: #d2836f;
+  --color-terracotta-dark: #8e4432;
 
-  --color-orange: #d9944a;
-  --color-orange-light: #efc589;
+  --color-orange: #da9650;
+  --color-orange-light: #efc98a;
 
-  --color-sky: #5b96b0;
-  --color-sky-light: #8fd8f2;
+  --color-sky: #6db8d4;
+  --color-sky-light: #a9dff0;
 
-  --color-gold: #e8b85c;
-  --color-gold-light: #f3d48f;
+  --color-gold: #e7b85c;
+  --color-gold-light: #f1d08d;
 
-  --color-ink: #3C3028;
-  --color-ink-soft: #6B5D4F;
+  /* Grass — a second, cooler green alongside Steppe Green, for foreground/ground detail */
+  --color-grass: #c5ce8a;
+  --color-grass-light: #dbe0b3;
 
-  /* Deep Blue — third accent per the brand system: rare/legendary, dusk & night scenes, wallet/market */
-  --color-deepblue: #435a8c;
-  --color-deepblue-light: #7089b3;
+  --color-ink: #493A30;
+  --color-ink-soft: #7A6A5C;
 
-  --font-display: 'Baloo 2', ui-rounded, sans-serif;
-  --font-body: 'Nunito', system-ui, sans-serif;
+  /* Deep Navy — third accent per the brand system: rare/legendary, dusk & night scenes, wallet/market */
+  --color-deepblue: #29445a;
+  --color-deepblue-light: #5c7a93;
 
-  --shadow-card: 0 8px 24px -8px rgba(60, 48, 40, 0.2), 0 2px 6px -2px rgba(60, 48, 40, 0.12);
-  --shadow-pop: 0 14px 34px -10px rgba(60, 48, 40, 0.3);
-  --shadow-soft: 0 4px 14px -6px rgba(60, 48, 40, 0.16);
+  --font-display: 'Montserrat', ui-sans-serif, sans-serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+
+  --shadow-card: 0 12px 30px -6px rgba(73, 58, 48, 0.14), 0 2px 8px -2px rgba(73, 58, 48, 0.1);
+  --shadow-pop: 0 14px 34px -10px rgba(73, 58, 48, 0.3);
+  --shadow-soft: 0 4px 14px -6px rgba(73, 58, 48, 0.16);
 
   --radius-card: 1.75rem;
 

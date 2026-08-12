@@ -121,7 +121,7 @@ export function ScanScreen() {
                     targetId === c.id ? 'border-terracotta bg-terracotta/10' : 'border-forest/10 bg-paper'
                   }`}
                 >
-                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FBF3E1" />
+                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FFF9ED" />
                   <span className="text-[10px] font-bold text-center leading-tight">{c.nameMn}</span>
                 </button>
               ))}
@@ -159,9 +159,9 @@ export function ScanScreen() {
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 18 }}
             className="relative rounded-[28px] overflow-hidden border-2"
-            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFCF4 55%)` }}
+            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFEFA 55%)` }}
           >
-            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E8B85C', '#FFFCF4']} />}
+            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E7B85C', '#FFFEFA']} />}
 
             <div className="flex items-center justify-between px-6 pt-5">
               <span className="font-display font-extrabold text-xs tracking-wide text-forest">GER NAADGAI</span>
@@ -324,12 +324,12 @@ function CompletionCelebration({ collectionId, onDone }: { collectionId: string;
       <div className="w-full flex flex-col gap-3 mt-6">
         <ShareButton
           variant="solid"
-          accent="#A94B35"
+          accent="#B85C45"
           label="Амжилтаа Хуваалц"
           config={
             {
               kind: 'collection-complete',
-              accent: '#A94B35',
+              accent: '#B85C45',
               badgeMn: 'Цуглуулга бүрдлээ',
               titleMn: collection.completionReward.titleMn,
               titleEn: collection.completionReward.titleEn,

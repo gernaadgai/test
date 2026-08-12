@@ -30,7 +30,7 @@ export function StoriesScreen() {
                 style={{ backgroundColor: unlocked ? `${story.accent}1f` : '#E4D9BE' }}
               >
                 {character ? (
-                  <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={story.accent} bodyColor="#FBF3E1" />
+                  <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={story.accent} bodyColor="#FFF9ED" />
                 ) : (
                   <BookOpen size={22} style={{ color: unlocked ? story.accent : undefined }} className={unlocked ? '' : 'text-ink-soft/40'} />
                 )}
