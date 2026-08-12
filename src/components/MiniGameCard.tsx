@@ -36,6 +36,6 @@ export function MiniGameCard({ game, unlocked, completed }: { game: MiniGame; un
     </div>
   )
 
-  if (!unlocked) return inner
+  if (!unlocked) return <Link to="/scan">{inner}</Link>
   return <Link to={`/play/${game.id}`}>{inner}</Link>
 }
