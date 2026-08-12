@@ -1,10 +1,20 @@
+import { getIllustration } from '../lib/illustrations'
+
 interface Props {
   size?: number
   className?: string
 }
 
-/** A stylised shagai (ankle bone) — the recurring GER NAADGAI reward glyph. */
+/**
+ * A stylised shagai (ankle bone) — the recurring GER NAADGAI reward glyph.
+ * Drop shagai.png into src/assets/illustrations/ to use real artwork here instead.
+ */
 export function ShagaiIcon({ size = 20, className }: Props) {
+  const artwork = getIllustration('shagai')
+  if (artwork) {
+    return <img src={artwork} alt="Шагай" width={size} height={size} className={className} style={{ objectFit: 'contain' }} />
+  }
+
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" className={className} xmlns="http://www.w3.org/2000/svg">
       <path

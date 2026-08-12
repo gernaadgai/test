@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { sound } from '../lib/sound'
+import { getIllustration } from '../lib/illustrations'
 
 interface Props {
   onEnter: () => void
@@ -387,6 +388,8 @@ function ForegroundBand({ y, width, reduceMotion }: { y: number; width: number; 
 /** The ger — drawn in a local ~200x190 box, anchored at its base (0,0) with roof rising above. */
 function GerGlyph({ phase }: { phase: Phase }) {
   const entering = phase === 'entering'
+  const artwork = getIllustration('ger')
+
   return (
     <motion.g animate={entering ? { scale: 1.12 } : { scale: [1, 1.015, 1] }} transition={entering ? { duration: 0.5, ease: 'easeOut' } : { duration: 4.2, repeat: Infinity, ease: 'easeInOut' }} style={{ transformOrigin: '0px 78px' }}>
       <ellipse cx="0" cy="86" rx="92" ry="11" fill="var(--color-ink)" opacity="0.14" />
@@ -405,44 +408,50 @@ function GerGlyph({ phase }: { phase: Phase }) {
         transition={{ duration: 4.4, repeat: Infinity, ease: 'easeOut' }}
       />
 
-      {/* roof */}
-      <path d="M-76 10 L0 -54 L76 10 Z" fill="var(--color-terracotta)" />
-      <path d="M-76 10 L0 -54 L76 10 L76 19 L0 -43 L-76 19 Z" fill="var(--color-terracotta-dark)" />
-      {[-48, -24, 0, 24, 48].map((x) => (
-        <line key={x} x1={x * 0.94} y1={10} x2="0" y2="-48" stroke="var(--color-terracotta-dark)" strokeWidth="1.7" opacity="0.55" />
-      ))}
-      {/* toono */}
-      <circle cx="0" cy="-47" r="10.5" fill="var(--color-gold)" />
-      <circle cx="0" cy="-47" r="6.5" fill="var(--color-ink)" />
-      <line x1="-4.5" y1="-57" x2="-4.5" y2="-74" stroke="var(--color-terracotta-dark)" strokeWidth="2.2" />
-      <line x1="4.5" y1="-57" x2="4.5" y2="-74" stroke="var(--color-terracotta-dark)" strokeWidth="2.2" />
-      <path d="M-4.5 -74 Q2.5 -81 9.5 -72" fill="none" stroke="var(--color-terracotta)" strokeWidth="2.8" strokeLinecap="round" />
+      {artwork ? (
+        <image href={artwork} x={-92} y={-98} width={184} height={198} preserveAspectRatio="xMidYMax meet" />
+      ) : (
+        <>
+          {/* roof */}
+          <path d="M-76 10 L0 -54 L76 10 Z" fill="var(--color-terracotta)" />
+          <path d="M-76 10 L0 -54 L76 10 L76 19 L0 -43 L-76 19 Z" fill="var(--color-terracotta-dark)" />
+          {[-48, -24, 0, 24, 48].map((x) => (
+            <line key={x} x1={x * 0.94} y1={10} x2="0" y2="-48" stroke="var(--color-terracotta-dark)" strokeWidth="1.7" opacity="0.55" />
+          ))}
+          {/* toono */}
+          <circle cx="0" cy="-47" r="10.5" fill="var(--color-gold)" />
+          <circle cx="0" cy="-47" r="6.5" fill="var(--color-ink)" />
+          <line x1="-4.5" y1="-57" x2="-4.5" y2="-74" stroke="var(--color-terracotta-dark)" strokeWidth="2.2" />
+          <line x1="4.5" y1="-57" x2="4.5" y2="-74" stroke="var(--color-terracotta-dark)" strokeWidth="2.2" />
+          <path d="M-4.5 -74 Q2.5 -81 9.5 -72" fill="none" stroke="var(--color-terracotta)" strokeWidth="2.8" strokeLinecap="round" />
 
-      {/* wall */}
-      <rect x="-84" y="10" width="168" height="64" rx="7" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="2.2" />
-      {[...Array(11)].map((_, i) => (
-        <path key={i} d={`M${-76 + i * 15.2} 10 q4.5 10 0 20`} stroke="var(--color-gold)" strokeWidth="2.4" fill="none" opacity="0.75" />
-      ))}
-      <rect x="-84" y="10" width="168" height="8" fill="var(--color-terracotta)" opacity="0.9" />
+          {/* wall */}
+          <rect x="-84" y="10" width="168" height="64" rx="7" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="2.2" />
+          {[...Array(11)].map((_, i) => (
+            <path key={i} d={`M${-76 + i * 15.2} 10 q4.5 10 0 20`} stroke="var(--color-gold)" strokeWidth="2.4" fill="none" opacity="0.75" />
+          ))}
+          <rect x="-84" y="10" width="168" height="8" fill="var(--color-terracotta)" opacity="0.9" />
 
-      {/* door — swings open when entering */}
-      <g transform="translate(-17,40)">
-        <rect x="0" y="0" width="34" height="34" rx="3" fill="var(--color-ink)" opacity="0.85" />
-        <motion.rect
-          x="0"
-          y="0"
-          width="34"
-          height="34"
-          rx="3"
-          fill="var(--color-terracotta)"
-          stroke="var(--color-terracotta-dark)"
-          strokeWidth="2.2"
-          animate={entering ? { rotateY: 74, x: -4 } : { x: 0, rotateY: 0 }}
-          transition={{ duration: 0.55, ease: 'easeOut' }}
-          style={{ transformOrigin: '0px 17px' }}
-        />
-        <circle cx="26" cy="18" r="1.9" fill="var(--color-gold-light)" />
-      </g>
+          {/* door — swings open when entering */}
+          <g transform="translate(-17,40)">
+            <rect x="0" y="0" width="34" height="34" rx="3" fill="var(--color-ink)" opacity="0.85" />
+            <motion.rect
+              x="0"
+              y="0"
+              width="34"
+              height="34"
+              rx="3"
+              fill="var(--color-terracotta)"
+              stroke="var(--color-terracotta-dark)"
+              strokeWidth="2.2"
+              animate={entering ? { rotateY: 74, x: -4 } : { x: 0, rotateY: 0 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              style={{ transformOrigin: '0px 17px' }}
+            />
+            <circle cx="26" cy="18" r="1.9" fill="var(--color-gold-light)" />
+          </g>
+        </>
+      )}
     </motion.g>
   )
 }
@@ -453,53 +462,67 @@ function faceProps() {
 
 /** Girl companion — deel with terracotta trim, holding shagai, looking toward the ger. */
 function GirlCharacter({ reduceMotion }: { reduceMotion: boolean }) {
+  const artwork = getIllustration('girl')
   return (
     <motion.g animate={reduceMotion ? undefined : { y: [0, -2.5, 0] }} transition={{ duration: 3.1, repeat: Infinity, ease: 'easeInOut' }}>
       <ellipse cx="0" cy="86" rx="20" ry="4.5" fill="var(--color-ink)" opacity="0.12" />
-      {/* legs */}
-      <path d="M-7 62 L-9 84 M7 62 L9 84" stroke="var(--color-ink)" strokeWidth="4" strokeLinecap="round" />
-      {/* deel body */}
-      <path d="M-19 32 Q0 22 19 32 L15 66 Q0 74 -15 66 Z" fill="var(--color-terracotta)" stroke="var(--color-terracotta-dark)" strokeWidth="1.6" />
-      <path d="M-8 38 L-8 60 M0 40 L0 62 M8 38 L8 60" stroke="var(--color-gold-light)" strokeWidth="1.4" opacity="0.75" />
-      {/* arms */}
-      <path d="M-19 34 Q-28 44 -24 54" fill="none" stroke="var(--color-terracotta)" strokeWidth="7" strokeLinecap="round" />
-      <path d="M19 34 Q27 42 22 50" fill="none" stroke="var(--color-terracotta)" strokeWidth="7" strokeLinecap="round" />
-      {/* shagai in hand */}
-      <rect x="17" y="45" width="8" height="7" rx="1.8" fill="var(--color-cream-dark)" stroke="var(--color-ink)" strokeWidth="1.4" />
-      {/* head */}
-      <circle cx="0" cy="14" r="16" fill="#F1CFA0" stroke="var(--color-ink)" strokeWidth="2" />
-      <path d="M-16 10 Q-18 -6 0 -8 Q18 -6 16 10 Q10 -1 0 0 Q-10 -1 -16 10 Z" fill="var(--color-ink)" />
-      <path d="M-16 8 Q-19 20 -13 26" fill="none" stroke="var(--color-ink)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M16 8 Q19 20 13 26" fill="none" stroke="var(--color-ink)" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="-5.5" cy="15" r="1.7" fill="var(--color-ink)" />
-      <circle cx="5.5" cy="15" r="1.7" fill="var(--color-ink)" />
-      <path d="M-3.5 21 Q0 24 3.5 21" {...faceProps()} strokeWidth={2.2} />
-      {/* headband ornament */}
-      <path d="M-15 5 Q0 -2 15 5" fill="none" stroke="var(--color-gold)" strokeWidth="2.6" />
+      {artwork ? (
+        <image href={artwork} x={-32} y={-12} width={64} height={100} preserveAspectRatio="xMidYMax meet" />
+      ) : (
+        <>
+          {/* legs */}
+          <path d="M-7 62 L-9 84 M7 62 L9 84" stroke="var(--color-ink)" strokeWidth="4" strokeLinecap="round" />
+          {/* deel body */}
+          <path d="M-19 32 Q0 22 19 32 L15 66 Q0 74 -15 66 Z" fill="var(--color-terracotta)" stroke="var(--color-terracotta-dark)" strokeWidth="1.6" />
+          <path d="M-8 38 L-8 60 M0 40 L0 62 M8 38 L8 60" stroke="var(--color-gold-light)" strokeWidth="1.4" opacity="0.75" />
+          {/* arms */}
+          <path d="M-19 34 Q-28 44 -24 54" fill="none" stroke="var(--color-terracotta)" strokeWidth="7" strokeLinecap="round" />
+          <path d="M19 34 Q27 42 22 50" fill="none" stroke="var(--color-terracotta)" strokeWidth="7" strokeLinecap="round" />
+          {/* shagai in hand */}
+          <rect x="17" y="45" width="8" height="7" rx="1.8" fill="var(--color-cream-dark)" stroke="var(--color-ink)" strokeWidth="1.4" />
+          {/* head */}
+          <circle cx="0" cy="14" r="16" fill="#F1CFA0" stroke="var(--color-ink)" strokeWidth="2" />
+          <path d="M-16 10 Q-18 -6 0 -8 Q18 -6 16 10 Q10 -1 0 0 Q-10 -1 -16 10 Z" fill="var(--color-ink)" />
+          <path d="M-16 8 Q-19 20 -13 26" fill="none" stroke="var(--color-ink)" strokeWidth="3" strokeLinecap="round" />
+          <path d="M16 8 Q19 20 13 26" fill="none" stroke="var(--color-ink)" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="-5.5" cy="15" r="1.7" fill="var(--color-ink)" />
+          <circle cx="5.5" cy="15" r="1.7" fill="var(--color-ink)" />
+          <path d="M-3.5 21 Q0 24 3.5 21" {...faceProps()} strokeWidth={2.2} />
+          {/* headband ornament */}
+          <path d="M-15 5 Q0 -2 15 5" fill="none" stroke="var(--color-gold)" strokeWidth="2.6" />
+        </>
+      )}
     </motion.g>
   )
 }
 
 /** Boy companion — forest-green deel, holding a small toy horse, looking toward the landscape. */
 function BoyCharacter({ reduceMotion }: { reduceMotion: boolean }) {
+  const artwork = getIllustration('boy')
   return (
     <motion.g animate={reduceMotion ? undefined : { y: [0, -2.5, 0] }} transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}>
       <ellipse cx="0" cy="86" rx="20" ry="4.5" fill="var(--color-ink)" opacity="0.12" />
-      <path d="M-8 62 L-10 84 M8 62 L10 84" stroke="var(--color-ink)" strokeWidth="4" strokeLinecap="round" />
-      <path d="M-19 32 Q0 22 19 32 L16 66 Q0 75 -16 66 Z" fill="var(--color-forest)" stroke="var(--color-forest-dark)" strokeWidth="1.6" />
-      <path d="M0 32 L0 66" stroke="var(--color-gold-light)" strokeWidth="1.6" opacity="0.8" />
-      <path d="M-19 34 Q-27 40 -22 48" fill="none" stroke="var(--color-forest)" strokeWidth="7" strokeLinecap="round" />
-      <path d="M19 34 Q28 44 24 54" fill="none" stroke="var(--color-forest)" strokeWidth="7" strokeLinecap="round" />
-      {/* small toy horse */}
-      <g transform="translate(20,46)">
-        <path d="M0 8 Q-2 0 3 -4 Q6 -8 11 -6 L13 -8 L12 -5 L10 -4 Q11 0 8 5" fill="none" stroke="var(--color-terracotta)" strokeWidth="2.2" strokeLinecap="round" />
-      </g>
-      <circle cx="0" cy="14" r="16" fill="#EFC08D" stroke="var(--color-ink)" strokeWidth="2" />
-      <path d="M-16 9 Q-17 -8 0 -9 Q17 -8 16 9 Q10 0 0 1 Q-10 0 -16 9 Z" fill="var(--color-ink)" />
-      <circle cx="-5.5" cy="16" r="1.7" fill="var(--color-ink)" />
-      <circle cx="5.5" cy="16" r="1.7" fill="var(--color-ink)" />
-      <path d="M-3.5 22 Q0 25 3.5 22" {...faceProps()} strokeWidth={2.2} />
-      <path d="M-13 2 Q0 -4 13 2" fill="none" stroke="var(--color-gold)" strokeWidth="2.4" />
+      {artwork ? (
+        <image href={artwork} x={-32} y={-12} width={64} height={100} preserveAspectRatio="xMidYMax meet" />
+      ) : (
+        <>
+          <path d="M-8 62 L-10 84 M8 62 L10 84" stroke="var(--color-ink)" strokeWidth="4" strokeLinecap="round" />
+          <path d="M-19 32 Q0 22 19 32 L16 66 Q0 75 -16 66 Z" fill="var(--color-forest)" stroke="var(--color-forest-dark)" strokeWidth="1.6" />
+          <path d="M0 32 L0 66" stroke="var(--color-gold-light)" strokeWidth="1.6" opacity="0.8" />
+          <path d="M-19 34 Q-27 40 -22 48" fill="none" stroke="var(--color-forest)" strokeWidth="7" strokeLinecap="round" />
+          <path d="M19 34 Q28 44 24 54" fill="none" stroke="var(--color-forest)" strokeWidth="7" strokeLinecap="round" />
+          {/* small toy horse */}
+          <g transform="translate(20,46)">
+            <path d="M0 8 Q-2 0 3 -4 Q6 -8 11 -6 L13 -8 L12 -5 L10 -4 Q11 0 8 5" fill="none" stroke="var(--color-terracotta)" strokeWidth="2.2" strokeLinecap="round" />
+          </g>
+          <circle cx="0" cy="14" r="16" fill="#EFC08D" stroke="var(--color-ink)" strokeWidth="2" />
+          <path d="M-16 9 Q-17 -8 0 -9 Q17 -8 16 9 Q10 0 0 1 Q-10 0 -16 9 Z" fill="var(--color-ink)" />
+          <circle cx="-5.5" cy="16" r="1.7" fill="var(--color-ink)" />
+          <circle cx="5.5" cy="16" r="1.7" fill="var(--color-ink)" />
+          <path d="M-3.5 22 Q0 25 3.5 22" {...faceProps()} strokeWidth={2.2} />
+          <path d="M-13 2 Q0 -4 13 2" fill="none" stroke="var(--color-gold)" strokeWidth="2.4" />
+        </>
+      )}
     </motion.g>
   )
 }
@@ -508,6 +531,17 @@ function BoyCharacter({ reduceMotion }: { reduceMotion: boolean }) {
 function HorseGlyph({ reduceMotion, muted = false }: { reduceMotion: boolean; muted?: boolean }) {
   const line = muted ? 'var(--color-forest-dark)' : 'var(--color-ink)'
   const body = muted ? 'var(--color-cream-dark)' : 'var(--color-paper)'
+  const artwork = getIllustration('horse-hero')
+
+  if (artwork) {
+    return (
+      <g opacity={muted ? 0.55 : 1}>
+        <ellipse cx="50" cy="88" rx="38" ry="5" fill="var(--color-ink)" opacity="0.12" />
+        <image href={artwork} x={-4} y={-4} width={120} height={98} preserveAspectRatio="xMidYMax meet" />
+      </g>
+    )
+  }
+
   return (
     <g opacity={muted ? 0.55 : 1}>
       <ellipse cx="50" cy="88" rx="38" ry="5" fill="var(--color-ink)" opacity="0.12" />

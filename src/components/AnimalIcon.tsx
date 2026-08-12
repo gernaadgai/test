@@ -1,4 +1,5 @@
 import type { AnimalId } from '../types'
+import { getIllustration } from '../lib/illustrations'
 
 interface Props {
   animal: AnimalId
@@ -13,8 +14,19 @@ interface Props {
 /**
  * Hand-drawn-style flat glyphs for each collectible species.
  * Single consistent stroke language so the whole roster reads as one world.
+ *
+ * If a matching file exists in src/assets/illustrations/ (e.g. horse.png), that
+ * artwork is used instead — drop one in any time to upgrade a species with no code change.
  */
 export function AnimalIcon({ animal, className, bodyColor = '#FFF9ED', lineColor = '#5C7C3E', size }: Props) {
+  const artwork = getIllustration(animal)
+  if (artwork) {
+    if (size) {
+      return <image href={artwork} width={size} height={size} className={className} preserveAspectRatio="xMidYMid meet" />
+    }
+    return <img src={artwork} alt={animal} className={className} style={{ objectFit: 'contain' }} />
+  }
+
   const s = { fill: bodyColor, stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const line = { fill: 'none', stroke: lineColor, strokeWidth: 3.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
 
