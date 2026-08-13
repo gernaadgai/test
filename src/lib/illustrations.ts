@@ -4,9 +4,9 @@
  * saving horse.png makes getIllustration('horse') return its URL.
  *
  * Recognised keys today:
- *   Animals   — horse, camel, sheep, goat, cow (matches Character['animal'])
- *   Hero world — ger, girl, boy, horse-hero, sky-bg
- *   Currency  — shagai
+ *   Animals    — horse, camel, sheep, goat, cow (matches Character['animal'])
+ *   Hero world — ger, girl, boy, horse-hero, background (full sky/mountain/steppe scene)
+ *   Currency   — shagai
  *
  * Until a file exists for a given key, every consuming component falls back
  * to its current hand-drawn SVG — nothing breaks if only some assets land.

@@ -137,40 +137,47 @@ interface SceneProps {
 
 function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
   const p = (factor: number) => (reduceMotion ? undefined : `translate(${parallax.x * factor}, ${parallax.y * factor * 0.5})`)
+  const bgArt = getIllustration('background')
   return (
     <svg viewBox="0 0 400 700" className="w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <SceneDefs />
-      <rect width="400" height="700" fill="url(#skyGradient)" />
-      <SunGlow cx={330} cy={90} r={46} reduceMotion={reduceMotion} />
+      {bgArt ? (
+        <image href={bgArt} x={0} y={0} width={400} height={520} preserveAspectRatio="xMidYMid slice" />
+      ) : (
+        <>
+          <rect width="400" height="700" fill="url(#skyGradient)" />
+          <SunGlow cx={330} cy={90} r={46} reduceMotion={reduceMotion} />
+          <g transform={p(8)}>
+            <CloudGlyph cx={80} cy={110} scale={1} reduceMotion={reduceMotion} duration={26} range={14} />
+            <CloudGlyph cx={280} cy={160} scale={0.7} reduceMotion={reduceMotion} duration={19} range={10} />
+          </g>
+          <g transform={p(14)}>
+            <MountainRange y={230} width={400} height={130} tone="var(--color-sky)" opacity={0.55} jag={0.9} />
+          </g>
+          <g transform={p(22)}>
+            <MountainRange y={270} width={400} height={130} tone="var(--color-forest-light)" opacity={0.65} jag={1.15} />
+          </g>
+          <g transform={p(30)}>
+            <HillBand y={340} width={400} height={140} tone="var(--color-forest-light)" opacity={0.32} />
+          </g>
+        </>
+      )}
       <g transform={p(4)}>
         <BirdFlock reduceMotion={reduceMotion} originX={60} originY={130} scale={0.8} />
         <EagleGlyph reduceMotion={reduceMotion} originX={230} originY={70} />
       </g>
-      <g transform={p(8)}>
-        <CloudGlyph cx={80} cy={110} scale={1} reduceMotion={reduceMotion} duration={26} range={14} />
-        <CloudGlyph cx={280} cy={160} scale={0.7} reduceMotion={reduceMotion} duration={19} range={10} />
-      </g>
-      <g transform={p(14)}>
-        <MountainRange y={230} width={400} height={130} tone="var(--color-sky)" opacity={0.55} jag={0.9} />
-      </g>
-      <g transform={p(22)}>
-        <MountainRange y={270} width={400} height={130} tone="var(--color-forest-light)" opacity={0.65} jag={1.15} />
-      </g>
-      <g transform={p(30)}>
-        <HillBand y={340} width={400} height={140} tone="var(--color-forest-light)" opacity={0.32} />
-      </g>
       {/* steppe ground */}
-      <path d="M0 430 Q200 405 400 430 L400 700 L0 700 Z" fill="var(--color-cream-dark)" />
+      <path d="M0 430 Q200 405 400 430 L400 700 L0 700 Z" fill="var(--color-cream-dark)" opacity={bgArt ? 0.55 : 1} />
       <path d="M0 460 Q200 438 400 460 L400 700 L0 700 Z" fill="var(--color-forest-light)" opacity="0.22" />
 
       <g transform="translate(200,300) scale(1.55)">
         <GerGlyph phase={phase} />
       </g>
 
-      <g transform="translate(112,398) scale(0.72)">
+      <g transform="translate(105,375) scale(1)">
         <GirlCharacter reduceMotion={reduceMotion} />
       </g>
-      <g transform="translate(258,402) scale(0.72)">
+      <g transform="translate(265,379) scale(1)">
         <BoyCharacter reduceMotion={reduceMotion} />
       </g>
 
@@ -192,41 +199,48 @@ function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
 
 function DesktopScene({ phase, parallax, reduceMotion }: SceneProps) {
   const p = (factor: number) => (reduceMotion ? undefined : `translate(${parallax.x * factor}, ${parallax.y * factor * 0.5})`)
+  const bgArt = getIllustration('background')
   return (
     <svg viewBox="0 0 1200 675" className="w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <SceneDefs />
-      <rect width="1200" height="675" fill="url(#skyGradient)" />
-      <SunGlow cx={1030} cy={110} r={64} reduceMotion={reduceMotion} />
+      {bgArt ? (
+        <image href={bgArt} x={0} y={0} width={1200} height={520} preserveAspectRatio="xMidYMid slice" />
+      ) : (
+        <>
+          <rect width="1200" height="675" fill="url(#skyGradient)" />
+          <SunGlow cx={1030} cy={110} r={64} reduceMotion={reduceMotion} />
+          <g transform={p(10)}>
+            <CloudGlyph cx={190} cy={120} scale={1.3} reduceMotion={reduceMotion} duration={30} range={22} />
+            <CloudGlyph cx={620} cy={90} scale={0.9} reduceMotion={reduceMotion} duration={24} range={16} />
+            <CloudGlyph cx={980} cy={190} scale={1.05} reduceMotion={reduceMotion} duration={21} range={18} />
+          </g>
+          <g transform={p(18)}>
+            <MountainRange y={230} width={1200} height={160} tone="var(--color-sky)" opacity={0.5} jag={0.7} />
+          </g>
+          <g transform={p(28)}>
+            <MountainRange y={280} width={1200} height={160} tone="var(--color-forest-light)" opacity={0.6} jag={0.95} />
+          </g>
+          <g transform={p(38)}>
+            <HillBand y={360} width={1200} height={150} tone="var(--color-forest-light)" opacity={0.3} />
+          </g>
+        </>
+      )}
       <g transform={p(6)}>
         <BirdFlock reduceMotion={reduceMotion} originX={220} originY={140} scale={1} />
         <EagleGlyph reduceMotion={reduceMotion} originX={720} originY={80} />
       </g>
-      <g transform={p(10)}>
-        <CloudGlyph cx={190} cy={120} scale={1.3} reduceMotion={reduceMotion} duration={30} range={22} />
-        <CloudGlyph cx={620} cy={90} scale={0.9} reduceMotion={reduceMotion} duration={24} range={16} />
-        <CloudGlyph cx={980} cy={190} scale={1.05} reduceMotion={reduceMotion} duration={21} range={18} />
-      </g>
-      <g transform={p(18)}>
-        <MountainRange y={230} width={1200} height={160} tone="var(--color-sky)" opacity={0.5} jag={0.7} />
-      </g>
-      <g transform={p(28)}>
-        <MountainRange y={280} width={1200} height={160} tone="var(--color-forest-light)" opacity={0.6} jag={0.95} />
-      </g>
-      <g transform={p(38)}>
-        <HillBand y={360} width={1200} height={150} tone="var(--color-forest-light)" opacity={0.3} />
-      </g>
 
-      <path d="M0 440 Q600 405 1200 440 L1200 675 L0 675 Z" fill="var(--color-cream-dark)" />
+      <path d="M0 440 Q600 405 1200 440 L1200 675 L0 675 Z" fill="var(--color-cream-dark)" opacity={bgArt ? 0.55 : 1} />
       <path d="M0 475 Q600 445 1200 475 L1200 675 L0 675 Z" fill="var(--color-forest-light)" opacity="0.2" />
 
       <g transform="translate(600,290) scale(2.1)">
         <GerGlyph phase={phase} />
       </g>
 
-      <g transform="translate(430,430) scale(1)">
+      <g transform="translate(410,401) scale(1.35)">
         <GirlCharacter reduceMotion={reduceMotion} />
       </g>
-      <g transform="translate(742,436) scale(1)">
+      <g transform="translate(762,407) scale(1.35)">
         <BoyCharacter reduceMotion={reduceMotion} />
       </g>
 

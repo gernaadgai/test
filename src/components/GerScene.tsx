@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import type { AnimalId } from '../types'
 import { AnimalIcon } from './AnimalIcon'
+import { getIllustration } from '../lib/illustrations'
 
 interface Props {
   companions?: AnimalId[]
@@ -32,6 +33,7 @@ const SEASON_TINT: Record<Season, string> = {
 export function GerScene({ companions = [], hasStories = false, hasZodiac = false, season }: Props) {
   const activeSeason = season ?? currentSeason()
   const isWinter = activeSeason === 'winter'
+  const gerArt = getIllustration('ger')
   const spots: Array<{ x: number; y: number; scale: number }> = [
     { x: 42, y: 268, scale: 1 },
     { x: 320, y: 272, scale: 0.95 },
@@ -135,31 +137,37 @@ export function GerScene({ companions = [], hasStories = false, hasZodiac = fals
             <path d="M0 -64 Q6 -74 0 -82 Q-6 -90 2 -98" fill="none" stroke="#A9DFF0" strokeWidth="3" strokeLinecap="round" />
           </motion.g>
 
-          {/* roof */}
-          <path d="M-64 8 L0 -46 L64 8 Z" fill="#D2836F" />
-          <path d="M-64 8 L0 -46 L64 8 L64 16 L0 -36 L-64 16 Z" fill="#8E4432" />
-          {/* roof spokes */}
-          {[-40, -20, 0, 20, 40].map((x) => (
-            <line key={x} x1={x * 0.94} y1={8} x2="0" y2="-40" stroke="#8E4432" strokeWidth="1.6" opacity="0.5" />
-          ))}
-          {/* toono crown */}
-          <circle cx="0" cy="-40" r="9" fill="#E7B85C" />
-          <circle cx="0" cy="-40" r="5.5" fill="#5C7C3E" />
-          {/* wind poles */}
-          <line x1="-4" y1="-49" x2="-4" y2="-64" stroke="#8E4432" strokeWidth="2" />
-          <line x1="4" y1="-49" x2="4" y2="-64" stroke="#8E4432" strokeWidth="2" />
-          <path d="M-4 -64 Q2 -70 8 -62" fill="none" stroke="#B85C45" strokeWidth="2.4" strokeLinecap="round" />
+          {gerArt ? (
+            <image href={gerArt} x={-76} y={-98} width={152} height={168} preserveAspectRatio="xMidYMax meet" />
+          ) : (
+            <>
+              {/* roof */}
+              <path d="M-64 8 L0 -46 L64 8 Z" fill="#D2836F" />
+              <path d="M-64 8 L0 -46 L64 8 L64 16 L0 -36 L-64 16 Z" fill="#8E4432" />
+              {/* roof spokes */}
+              {[-40, -20, 0, 20, 40].map((x) => (
+                <line key={x} x1={x * 0.94} y1={8} x2="0" y2="-40" stroke="#8E4432" strokeWidth="1.6" opacity="0.5" />
+              ))}
+              {/* toono crown */}
+              <circle cx="0" cy="-40" r="9" fill="#E7B85C" />
+              <circle cx="0" cy="-40" r="5.5" fill="#5C7C3E" />
+              {/* wind poles */}
+              <line x1="-4" y1="-49" x2="-4" y2="-64" stroke="#8E4432" strokeWidth="2" />
+              <line x1="4" y1="-49" x2="4" y2="-64" stroke="#8E4432" strokeWidth="2" />
+              <path d="M-4 -64 Q2 -70 8 -62" fill="none" stroke="#B85C45" strokeWidth="2.4" strokeLinecap="round" />
 
-          {/* wall band */}
-          <rect x="-70" y="8" width="140" height="54" rx="6" fill="#FFF9ED" stroke="#5C7C3E" strokeWidth="2" />
-          {/* pattern strip */}
-          {[...Array(9)].map((_, i) => (
-            <path key={i} d={`M${-64 + i * 16} 8 q4 8 0 16`} stroke="#E7B85C" strokeWidth="2.2" fill="none" opacity="0.7" />
-          ))}
-          {/* door */}
-          <rect x="-14" y="32" width="28" height="30" rx="3" fill="#B85C45" />
-          <rect x="-14" y="32" width="28" height="30" rx="3" fill="none" stroke="#8E4432" strokeWidth="2" />
-          <circle cx="8" cy="47" r="1.6" fill="#F1D08D" />
+              {/* wall band */}
+              <rect x="-70" y="8" width="140" height="54" rx="6" fill="#FFF9ED" stroke="#5C7C3E" strokeWidth="2" />
+              {/* pattern strip */}
+              {[...Array(9)].map((_, i) => (
+                <path key={i} d={`M${-64 + i * 16} 8 q4 8 0 16`} stroke="#E7B85C" strokeWidth="2.2" fill="none" opacity="0.7" />
+              ))}
+              {/* door */}
+              <rect x="-14" y="32" width="28" height="30" rx="3" fill="#B85C45" />
+              <rect x="-14" y="32" width="28" height="30" rx="3" fill="none" stroke="#8E4432" strokeWidth="2" />
+              <circle cx="8" cy="47" r="1.6" fill="#F1D08D" />
+            </>
+          )}
         </g>
 
         {/* companions collected so far, scattered on the grass — gentle idle bob */}
