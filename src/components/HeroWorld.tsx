@@ -142,7 +142,7 @@ function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
     <svg viewBox="0 0 400 700" className="w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <SceneDefs />
       {bgArt ? (
-        <image href={bgArt} x={0} y={0} width={400} height={520} preserveAspectRatio="xMidYMid slice" />
+        <image href={bgArt} x={0} y={0} width={400} height={700} preserveAspectRatio="xMidYMid slice" />
       ) : (
         <>
           <rect width="400" height="700" fill="url(#skyGradient)" />
@@ -167,8 +167,12 @@ function MobileScene({ phase, parallax, reduceMotion }: SceneProps) {
         <EagleGlyph reduceMotion={reduceMotion} originX={230} originY={70} />
       </g>
       {/* steppe ground */}
-      <path d="M0 430 Q200 405 400 430 L400 700 L0 700 Z" fill="var(--color-cream-dark)" opacity={bgArt ? 0.55 : 1} />
-      <path d="M0 460 Q200 438 400 460 L400 700 L0 700 Z" fill="var(--color-forest-light)" opacity="0.22" />
+      {!bgArt && (
+        <>
+          <path d="M0 430 Q200 405 400 430 L400 700 L0 700 Z" fill="var(--color-cream-dark)" />
+          <path d="M0 460 Q200 438 400 460 L400 700 L0 700 Z" fill="var(--color-forest-light)" opacity="0.22" />
+        </>
+      )}
 
       <g transform="translate(200,300) scale(1.55)">
         <GerGlyph phase={phase} />
@@ -204,7 +208,7 @@ function DesktopScene({ phase, parallax, reduceMotion }: SceneProps) {
     <svg viewBox="0 0 1200 675" className="w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <SceneDefs />
       {bgArt ? (
-        <image href={bgArt} x={0} y={0} width={1200} height={520} preserveAspectRatio="xMidYMid slice" />
+        <image href={bgArt} x={0} y={0} width={1200} height={675} preserveAspectRatio="xMidYMid slice" />
       ) : (
         <>
           <rect width="1200" height="675" fill="url(#skyGradient)" />
@@ -230,8 +234,12 @@ function DesktopScene({ phase, parallax, reduceMotion }: SceneProps) {
         <EagleGlyph reduceMotion={reduceMotion} originX={720} originY={80} />
       </g>
 
-      <path d="M0 440 Q600 405 1200 440 L1200 675 L0 675 Z" fill="var(--color-cream-dark)" opacity={bgArt ? 0.55 : 1} />
-      <path d="M0 475 Q600 445 1200 475 L1200 675 L0 675 Z" fill="var(--color-forest-light)" opacity="0.2" />
+      {!bgArt && (
+        <>
+          <path d="M0 440 Q600 405 1200 440 L1200 675 L0 675 Z" fill="var(--color-cream-dark)" />
+          <path d="M0 475 Q600 445 1200 475 L1200 675 L0 675 Z" fill="var(--color-forest-light)" opacity="0.2" />
+        </>
+      )}
 
       <g transform="translate(600,290) scale(2.1)">
         <GerGlyph phase={phase} />
