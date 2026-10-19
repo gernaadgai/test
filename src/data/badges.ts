@@ -6,6 +6,8 @@ export const BADGES: Badge[] = [
   { id: 'badge-story-keeper', nameMn: 'ҮЛГЭРИЙН ХҮН', nameEn: 'Story Keeper', icon: '📖', description: 'Completed your first story.' },
   { id: 'badge-game-master', nameMn: 'ТОГЛООМЫН МАСТЕР', nameEn: 'Game Master', icon: '🏆', description: 'Completed 5 mini-games.' },
   { id: 'badge-year-keeper', nameMn: 'ЖИЛИЙН ЭЗЭН', nameEn: 'Year Keeper', icon: '🐑', description: 'Collected the 2027 annual zodiac special edition.' },
+  { id: 'badge-explorer', nameMn: 'СУДЛААЧ', nameEn: 'Explorer', icon: '🧭', description: 'Discovered everything in the Mongolian world.' },
+  { id: 'badge-ger-keeper', nameMn: 'ГЭРИЙН ЭЗЭН', nameEn: 'Ger Keeper', icon: '🏕', description: 'Found every treasure hidden inside the ger.' },
   { id: 'badge-journey', nameMn: '12 ЖИЛИЙН АЯЛАГЧ', nameEn: '12-Year Journey', icon: '🌟', description: 'Complete the entire zodiac cycle across 12 years.' },
 ]
 

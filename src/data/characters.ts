@@ -9,7 +9,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'five-treasures',
     number: 1,
     rarity: 'common',
-    accent: '#B85C45',
+    accent: '#C45A3C',
     tagline: 'Wind of the steppe',
     taglineMn: 'Талын салхи',
     story:
@@ -30,7 +30,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'five-treasures',
     number: 2,
     rarity: 'special',
-    accent: '#E7B85C',
+    accent: '#B07A1F',
     tagline: 'Ship of the desert',
     taglineMn: 'Говийн хөлөг',
     story:
@@ -51,7 +51,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'five-treasures',
     number: 3,
     rarity: 'common',
-    accent: '#6DB8D4',
+    accent: '#4F85A3',
     tagline: 'Gentle giver of warmth',
     taglineMn: 'Дулааны эзэн',
     story:
@@ -72,7 +72,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'five-treasures',
     number: 4,
     rarity: 'common',
-    accent: '#9DBB72',
+    accent: '#5F7F3F',
     tagline: 'Mountain climber',
     taglineMn: 'Уулын авирагч',
     story:
@@ -93,7 +93,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'five-treasures',
     number: 5,
     rarity: 'common',
-    accent: '#8E4432',
+    accent: '#9C4128',
     tagline: 'Heart of the family',
     taglineMn: 'Гэр бүлийн зүрх',
     story:
@@ -114,7 +114,7 @@ export const CHARACTERS: Character[] = [
     collectionId: 'sheep-2027',
     number: 1,
     rarity: 'legendary',
-    accent: '#D2836F',
+    accent: '#C0553A',
     tagline: '2027 Limited Edition',
     taglineMn: '2027 Хязгаарлагдмал хэвлэл',
     story:

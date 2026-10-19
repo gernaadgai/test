@@ -35,10 +35,10 @@ export function CollectibleCard({ character, unlocked }: Props) {
       )}
       <div
         className={`w-16 h-16 rounded-full flex items-center justify-center mt-2 ${unlocked ? '' : 'grayscale opacity-40'}`}
-        style={{ backgroundColor: unlocked ? `${character.accent}1f` : '#E4D9BE' }}
+        style={{ backgroundColor: unlocked ? `${character.accent}1f` : '#E7D6B7' }}
       >
         {unlocked ? (
-          <AnimalIcon animal={character.animal} className="w-11 h-11" bodyColor="#FFF9ED" lineColor={character.accent} />
+          <AnimalIcon animal={character.animal} className="w-11 h-11" bodyColor="#FAF8F1" lineColor={character.accent} />
         ) : (
           <Lock size={22} className="text-ink-soft/40" />
         )}

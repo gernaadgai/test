@@ -48,7 +48,7 @@ export function ProductDetailScreen() {
           )}
           <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ backgroundColor: `${product.accent}22` }}>
             {character ? (
-              <AnimalIcon animal={character.animal} className="w-24 h-24" lineColor={product.accent} bodyColor="#FFFEFA" />
+              <AnimalIcon animal={character.animal} className="w-24 h-24" lineColor={product.accent} bodyColor="#FFFDF9" />
             ) : Icon ? (
               <Icon size={56} style={{ color: product.accent }} />
             ) : (
@@ -74,7 +74,7 @@ export function ProductDetailScreen() {
             className={`w-full flex items-center justify-center gap-2 rounded-2xl py-4 font-display font-extrabold text-cream shadow-[var(--shadow-pop)] active:scale-[0.98] transition-transform ${
               soldOut ? 'bg-ink-soft/30 cursor-not-allowed' : ''
             }`}
-            style={soldOut ? {} : { backgroundColor: added ? '#9DBB72' : product.accent }}
+            style={soldOut ? {} : { backgroundColor: added ? '#A7BB82' : product.accent }}
           >
             {added ? (
               <>

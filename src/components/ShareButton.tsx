@@ -13,7 +13,7 @@ interface Props {
   className?: string
 }
 
-export function ShareButton({ config, label = 'Нээлтээ Хуваалц', variant = 'outline', accent = '#5C7C3E', className = '' }: Props) {
+export function ShareButton({ config, label = 'Нээлтээ Хуваалц', variant = 'outline', accent = '#183F35', className = '' }: Props) {
   const [open, setOpen] = useState(false)
   const sharingAllowed = useSettingsStore((s) => s.sharingAllowed)
 

@@ -140,8 +140,8 @@ export function QuizScreen() {
 
       {phase === 'done' && (
         <div className="relative flex-1 flex flex-col items-center justify-center text-center gap-3">
-          <ConfettiBurst colors={['#E7B85C', '#B85C45', '#FFFEFA']} />
-          <CharacterBuddy animal={question.target.animal} state="celebrating" size={100} lineColor="#B85C45" />
+          <ConfettiBurst colors={['#E8BB62', '#C45A3C', '#FFFDF9']} />
+          <CharacterBuddy animal={question.target.animal} state="celebrating" size={100} lineColor="#C45A3C" />
           <h2 className="font-display font-extrabold text-xl text-forest">Баяр хүргэе!</h2>
           <p className="text-sm font-medium text-ink-soft/70">Чи Монголын амьтдыг сайн мэддэг юм байна!</p>
           <ShagaiReward count={shagai} />

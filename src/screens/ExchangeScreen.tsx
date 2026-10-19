@@ -42,7 +42,7 @@ export function ExchangeScreen() {
               return (
                 <div key={characterId} className="rounded-2xl bg-paper border border-forest/10 p-4 flex items-center gap-3">
                   <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${character.accent}18` }}>
-                    <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={character.accent} bodyColor="#FFFEFA" />
+                    <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor={character.accent} bodyColor="#FFFDF9" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-display font-extrabold text-sm">{character.nameMn}</p>

@@ -1,22 +1,25 @@
 import { NavLink } from 'react-router-dom'
-import { Home, LayoutGrid, Gamepad2, BookOpen, Sparkles, UserRound } from 'lucide-react'
+import { Mountain, Tent, LayoutGrid, Gamepad2, ScanLine } from 'lucide-react'
 import { sound } from '../lib/sound'
 import { useTranslate } from '../i18n/useTranslate'
 import type { DictKey } from '../i18n/dictionary'
 
-const TABS: Array<{ to: string; key: DictKey; icon: typeof Home }> = [
-  { to: '/', key: 'nav_home', icon: Home },
+const TABS: Array<{ to: string; key: DictKey; icon: typeof Mountain }> = [
+  { to: '/', key: 'nav_world', icon: Mountain },
+  { to: '/ger', key: 'nav_ger', icon: Tent },
   { to: '/collection', key: 'nav_collection', icon: LayoutGrid },
   { to: '/play', key: 'nav_play', icon: Gamepad2 },
-  { to: '/stories', key: 'nav_stories', icon: BookOpen },
-  { to: '/journey', key: 'nav_journey', icon: Sparkles },
-  { to: '/profile', key: 'nav_profile', icon: UserRound },
+  { to: '/scan', key: 'nav_scan', icon: ScanLine },
 ]
 
+/** A light floating dock — five places, one icon family, never covers the story art. */
 export function NavigationBar() {
   const t = useTranslate()
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-paper/95 backdrop-blur border-t border-forest/10 px-1 pb-[env(safe-area-inset-bottom)] z-40">
+    <nav
+      aria-label="Үндсэн цэс"
+      className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-40 w-[calc(100%-1.5rem)] max-w-[480px] -translate-x-1/2 rounded-[26px] border border-forest/10 bg-paper/92 px-1.5 py-1 shadow-[var(--shadow-pop)] backdrop-blur-md"
+    >
       <ul className="flex items-stretch justify-between">
         {TABS.map(({ to, key, icon: Icon }) => (
           <li key={to} className="flex-1">
@@ -25,13 +28,13 @@ export function NavigationBar() {
               end={to === '/'}
               onClick={() => sound.tap()}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 py-2.5 transition-colors ${
-                  isActive ? 'text-terracotta' : 'text-ink-soft/60'
+                `flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-[20px] py-1.5 transition-colors ${
+                  isActive ? 'bg-forest text-cream' : 'text-ink-soft hover:text-forest'
                 }`
               }
             >
-              <Icon size={20} strokeWidth={2.3} />
-              <span className="text-[9.5px] font-semibold tracking-wide">{t(key)}</span>
+              <Icon size={21} strokeWidth={2.3} aria-hidden />
+              <span className="text-[10px] font-bold tracking-wide">{t(key)}</span>
             </NavLink>
           </li>
         ))}

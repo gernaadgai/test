@@ -153,7 +153,7 @@ export function MiniGameScreen() {
                   className="absolute w-14 h-14 rounded-full flex items-center justify-center shadow-md"
                   style={{ left: `${t.x}%`, top: `${t.y}%`, backgroundColor: `${game.accent}cc` }}
                 >
-                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FFFEFA" bodyColor={game.accent} />}
+                  {character && <AnimalIcon animal={character.animal} className="w-9 h-9" lineColor="#FFFDF9" bodyColor={game.accent} />}
                 </motion.button>
               ))}
             </AnimatePresence>
@@ -163,7 +163,7 @@ export function MiniGameScreen() {
 
       {phase === 'result' && (
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
-          {stars === 3 && <ConfettiBurst colors={[game.accent, '#E7B85C', '#FFFEFA']} />}
+          {stars === 3 && <ConfettiBurst colors={[game.accent, '#E8BB62', '#FFFDF9']} />}
           {character && (
             <div className="w-24 h-24 rounded-full flex items-center justify-center mb-1" style={{ backgroundColor: `${game.accent}22` }}>
               <CharacterBuddy animal={character.animal} state={resultBuddyState} size={80} lineColor={game.accent} />

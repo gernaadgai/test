@@ -7,6 +7,9 @@ export const DICTIONARY = {
   nav_stories: { mn: 'Үлгэр', en: 'Stories' },
   nav_journey: { mn: '12 жил', en: '12 Years' },
   nav_profile: { mn: 'Профайл', en: 'Profile' },
+  nav_world: { mn: 'Ертөнц', en: 'World' },
+  nav_ger: { mn: 'Миний гэр', en: 'My Ger' },
+  nav_scan: { mn: 'Скан', en: 'Scan' },
 
   // home
   brand_tagline: { mn: 'Монголоо гартаа атга', en: 'Mongolia in your hands' },

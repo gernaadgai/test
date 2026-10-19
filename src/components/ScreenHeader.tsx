@@ -14,7 +14,7 @@ interface Props {
   right?: React.ReactNode
 }
 
-export function ScreenHeader({ titleMn, titleEn, title, subtitle, back, accent = '#5C7C3E', right }: Props) {
+export function ScreenHeader({ titleMn, titleEn, title, subtitle, back, accent = '#183F35', right }: Props) {
   const navigate = useNavigate()
   const language = useLanguage()
 

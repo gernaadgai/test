@@ -69,7 +69,7 @@ export function StoryReaderScreen() {
               >
                 <div className="w-40 h-40 rounded-3xl flex items-center justify-center" style={{ backgroundColor: `${story.accent}18` }}>
                   {character ? (
-                    <AnimalIcon animal={character.animal} className="w-28 h-28" lineColor={story.accent} bodyColor="#FFFEFA" />
+                    <AnimalIcon animal={character.animal} className="w-28 h-28" lineColor={story.accent} bodyColor="#FFFDF9" />
                   ) : (
                     <BookOpen size={64} style={{ color: story.accent }} />
                   )}

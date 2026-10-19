@@ -18,7 +18,7 @@ interface Props {
  * If a matching file exists in src/assets/illustrations/ (e.g. horse.png), that
  * artwork is used instead — drop one in any time to upgrade a species with no code change.
  */
-export function AnimalIcon({ animal, className, bodyColor = '#FFF9ED', lineColor = '#5C7C3E', size }: Props) {
+export function AnimalIcon({ animal, className, bodyColor = '#FAF8F1', lineColor = '#183F35', size }: Props) {
   const artwork = getIllustration(animal)
   if (artwork) {
     if (size) {

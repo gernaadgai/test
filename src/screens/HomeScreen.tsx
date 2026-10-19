@@ -1,108 +1,171 @@
-import { Link } from 'react-router-dom'
-import { ScanLine, ChevronRight, UserRound, ShoppingBag } from 'lucide-react'
-import { GerScene } from '../components/GerScene'
-import { ProgressRing } from '../components/ProgressRing'
-import { useCollectionStore, collectionProgress, totalCollectibles } from '../store/useCollectionStore'
-import { CHARACTERS } from '../data/characters'
-import { getCurrentZodiacYear } from '../data/zodiac'
-import { useTranslate } from '../i18n/useTranslate'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Menu, X, Compass, UserRound, BookOpen, Sparkles, ShoppingBag, Volume2, VolumeX } from 'lucide-react'
+import { WorldScene } from '../components/WorldScene'
+import { DiscoverySheet } from '../components/DiscoverySheet'
+import { WORLD_DISCOVERIES, type Discovery } from '../data/discoveries'
+import { useCollectionStore } from '../store/useCollectionStore'
+import { useSettingsStore } from '../store/useSettingsStore'
+import { sound } from '../lib/sound'
 
+const MENU: Array<{ to: string; label: string; sub: string; icon: typeof UserRound }> = [
+  { to: '/profile', label: 'Миний профайл', sub: 'Profile & badges', icon: UserRound },
+  { to: '/stories', label: 'Үлгэр', sub: 'Stories', icon: BookOpen },
+  { to: '/journey', label: '12 жилийн аялал', sub: '12-Year Journey', icon: Sparkles },
+  { to: '/market', label: 'Дэлгүүр', sub: 'Market', icon: ShoppingBag },
+]
+
+/** The home screen IS the world: a living Mongolian landscape with the ger as its door. */
 export function HomeScreen() {
-  const t = useTranslate()
-  const unlockedIds = useCollectionStore((s) => s.unlockedCharacterIds)
-  const completedStories = useCollectionStore((s) => s.completedStoryIds)
-  const avatar = useCollectionStore((s) => s.avatar)
-  const collectorName = useCollectionStore((s) => s.collectorName)
+  const navigate = useNavigate()
+  const discoveredIds = useCollectionStore((s) => s.discoveredIds)
+  const discover = useCollectionStore((s) => s.discover)
+  const soundEnabled = useSettingsStore((s) => s.soundEnabled)
+  const toggleSound = useSettingsStore((s) => s.toggleSound)
 
-  const companions = unlockedIds
-    .map((id) => CHARACTERS.find((c) => c.id === id)?.animal)
-    .filter((a): a is NonNullable<typeof a> => Boolean(a))
+  const [sheet, setSheet] = useState<{ item: Discovery; isNew: boolean } | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [entering, setEntering] = useState(false)
+  const timer = useRef<number>(0)
 
-  const five = collectionProgress('five-treasures', unlockedIds)
-  const year = getCurrentZodiacYear()
-  const total = totalCollectibles()
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const worldFound = WORLD_DISCOVERIES.filter((d) => discoveredIds.includes(d.id)).length
+
+  const onSelect = useCallback(
+    (id: string) => {
+      const item = WORLD_DISCOVERIES.find((d) => d.id === id)
+      if (!item || entering) return
+      const { isNew } = discover(id)
+      if (isNew) sound.unlock()
+      else sound.tap()
+      setSheet({ item, isNew })
+    },
+    [discover, entering],
+  )
+
+  const enterGer = useCallback(() => {
+    if (entering) return
+    setEntering(true)
+    sound.pop()
+    timer.current = window.setTimeout(() => navigate('/ger'), 780)
+  }, [entering, navigate])
 
   return (
-    <div>
-      <div className="flex items-center justify-between px-5 pt-6">
-        <div>
-          <p className="font-display font-extrabold text-lg tracking-wide text-forest">GER NAADGAI</p>
-          <p className="text-[11px] uppercase tracking-[0.14em] text-ink-soft/60 font-semibold">{t('home_world')}</p>
+    <div className="fixed inset-0 z-0 overflow-hidden bg-cream">
+      <WorldScene discoveredIds={discoveredIds} onSelect={onSelect} onEnterGer={enterGer} entering={entering} />
+
+      {/* HUD — never covers the ger or the animals */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] md:px-8 md:pt-6">
+        <div className="rounded-2xl bg-paper/80 px-3.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-sm">
+          <p className="font-display text-base font-extrabold leading-tight tracking-wide text-forest md:text-lg">ГЭР НААДГАЙ</p>
+          <p className="hidden text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-soft sm:block md:text-xs">Монголын наадгайгаар аялцгаая</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            to="/market"
-            className="w-11 h-11 rounded-full bg-paper border border-forest/10 shadow-sm flex items-center justify-center"
+
+        <div className="pointer-events-auto flex items-center gap-2">
+          <span
+            className="flex h-11 items-center gap-1.5 rounded-full bg-paper/85 px-3 text-xs font-extrabold text-forest shadow-[var(--shadow-soft)] backdrop-blur-sm"
+            aria-label={`Нээлт ${worldFound} / ${WORLD_DISCOVERIES.length}`}
           >
-            <ShoppingBag size={18} className="text-forest" />
-          </Link>
-          <Link
-            to="/profile"
-            className="w-11 h-11 rounded-full bg-paper border border-forest/10 shadow-sm flex items-center justify-center text-xl"
+            <Compass size={16} /> {worldFound}/{WORLD_DISCOVERIES.length}
+          </span>
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-label={soundEnabled ? 'Дууг хаах / Mute' : 'Дууг асаах / Unmute'}
+            aria-pressed={!soundEnabled}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-paper/85 text-forest shadow-[var(--shadow-soft)] backdrop-blur-sm transition-transform active:scale-95"
           >
-            {avatar || <UserRound size={20} />}
-          </Link>
+            {soundEnabled ? <Volume2 size={19} /> : <VolumeX size={19} />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Цэс / Menu"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-paper/85 text-forest shadow-[var(--shadow-soft)] backdrop-blur-sm transition-transform active:scale-95"
+          >
+            <Menu size={20} />
+          </button>
         </div>
       </div>
 
-      <div className="px-5 mt-4">
-        <GerScene companions={companions} hasStories={completedStories.length > 0} hasZodiac={unlockedIds.includes('sheep-2027')} />
-      </div>
-
-      <div className="px-5 mt-4">
-        <p className="text-sm font-medium text-ink-soft/80">
-          {t('home_welcome')}, <span className="font-bold text-ink">{collectorName}</span> — {unlockedIds.length}/{total} {t('home_collected_so_far')}.
-        </p>
-      </div>
-
-      {/* current year card */}
-      <div className="px-5 mt-4">
-        <Link
-          to="/journey"
-          className="block rounded-3xl p-5 relative overflow-hidden shadow-[var(--shadow-pop)]"
-          style={{ background: 'linear-gradient(135deg,#D2836F,#B85C45)' }}
+      {/* the clear invitation — the ger itself is also a button */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-20 flex flex-col items-center gap-2 px-4 md:bottom-28">
+        {worldFound === 0 && (
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="rounded-full bg-paper/85 px-3.5 py-1.5 text-[11px] font-bold text-forest shadow-[var(--shadow-soft)] backdrop-blur-sm"
+          >
+            Алтан одтой зүйлсийг товшоод нээгээрэй
+          </motion.p>
+        )}
+        <motion.button
+          type="button"
+          onClick={enterGer}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
+          className="pointer-events-auto flex items-center gap-2 rounded-2xl bg-gold px-7 py-3.5 text-sm font-extrabold text-forest-dark shadow-[var(--shadow-pop)] md:text-base"
         >
-          <div className="relative z-10 text-cream">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] opacity-80">{year.year} · Хязгаарлагдмал</p>
-            <h2 className="font-display font-extrabold text-2xl mt-1">{year.animalMn} ЖИЛ</h2>
-            <p className="text-xs mt-0.5 opacity-75">Year of the {year.animalEn}</p>
-            <p className="text-sm mt-3 opacity-95 font-medium">{t('home_journey_begins')}</p>
-            <div className="inline-flex items-center gap-1 mt-4 text-xs font-bold bg-cream/20 rounded-full px-3 py-1.5">
-              {t('home_view_journey')} <ChevronRight size={14} />
-            </div>
-          </div>
-          <div className="absolute -right-4 -bottom-4 text-[110px] opacity-20 select-none">🐑</div>
-        </Link>
+          НААДЪЯ <span aria-hidden>→</span>
+        </motion.button>
       </div>
 
-      {/* five treasures progress */}
-      <div className="px-5 mt-4">
-        <Link to="/collection" className="flex items-center gap-4 rounded-3xl bg-paper border border-forest/10 shadow-[var(--shadow-card)] p-4">
-          <ProgressRing progress={five.collected / five.total} color="#5C7C3E">
-            <span className="font-display font-extrabold text-sm text-forest">
-              {five.collected}/{five.total}
-            </span>
-          </ProgressRing>
-          <div className="flex-1 min-w-0">
-            <p className="font-display font-extrabold text-sm text-forest">ТАВАН ХОШУУ МАЛ</p>
-            <p className="text-[11px] text-ink-soft/45">Five Treasures</p>
-            <p className="text-xs text-ink-soft/60 mt-0.5 font-medium">{five.collected}/{five.total} цугласан</p>
-          </div>
-          <ChevronRight size={18} className="text-ink-soft/40" />
-        </Link>
-      </div>
+      {/* cream wash that carries the child through the door */}
+      <AnimatePresence>
+        {entering && (
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-30 bg-cream"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.25, ease: 'easeIn' }}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* CTA */}
-      <div className="px-5 mt-5 mb-2">
-        <Link
-          to="/scan"
-          className="flex items-center justify-center gap-2 w-full rounded-2xl bg-forest text-cream font-display font-extrabold text-base py-4 shadow-[var(--shadow-pop)] active:scale-[0.98] transition-transform"
-        >
-          <ScanLine size={20} />
-          {t('home_continue')}
-        </Link>
-        <p className="text-center text-[11px] text-ink-soft/50 mt-2">{t('home_footer_note')}</p>
-      </div>
+      <DiscoverySheet item={sheet?.item ?? null} isNew={sheet?.isNew ?? false} onClose={() => setSheet(null)} />
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div className="fixed inset-0 z-[60] flex items-start justify-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <button type="button" aria-label="Хаах / Close" onClick={() => setMenuOpen(false)} className="absolute inset-0 cursor-default bg-forest-dark/40 backdrop-blur-[2px]" />
+            <motion.nav
+              aria-label="Цэс"
+              initial={{ x: 40, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 40, opacity: 0 }}
+              className="relative m-4 w-[min(320px,calc(100%-2rem))] rounded-3xl bg-paper p-3 shadow-[var(--shadow-pop)]"
+            >
+              <div className="flex items-center justify-between px-3 pb-2 pt-1">
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-ink-soft">Цэс</p>
+                <button type="button" onClick={() => setMenuOpen(false)} aria-label="Хаах / Close" className="flex h-11 w-11 items-center justify-center rounded-full bg-cream text-forest">
+                  <X size={20} />
+                </button>
+              </div>
+              <ul className="flex flex-col">
+                {MENU.map(({ to, label, sub, icon: Icon }) => (
+                  <li key={to}>
+                    <Link to={to} onClick={() => sound.tap()} className="flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-cream active:bg-cream-dark/60">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cream text-forest">
+                        <Icon size={20} />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-extrabold text-ink">{label}</span>
+                        <span className="block text-[11px] font-medium text-ink-soft">{sub}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

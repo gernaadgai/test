@@ -98,27 +98,27 @@ export async function renderShareCard(config: ShareCardConfig, format: ShareForm
   const ctx = canvas.getContext('2d')
   if (!ctx) return canvas
 
-  const cream = '#FFF9ED'
-  const paper = '#FFFEFA'
-  const ink = '#493A30'
+  const cream = '#FAF8F1'
+  const paper = '#FFFDF9'
+  const ink = '#1E2B26'
 
   // sky gradient
   const sky = ctx.createLinearGradient(0, 0, 0, h)
   sky.addColorStop(0, hexToRgba(config.accent, 0.35))
   sky.addColorStop(0.55, cream)
-  sky.addColorStop(1, '#F4E5C6')
+  sky.addColorStop(1, '#E7D6B7')
   ctx.fillStyle = sky
   ctx.fillRect(0, 0, w, h)
 
   // sun glow
   ctx.beginPath()
   ctx.arc(w * 0.78, h * 0.16, w * 0.14, 0, Math.PI * 2)
-  ctx.fillStyle = hexToRgba('#F1D08D', 0.5)
+  ctx.fillStyle = hexToRgba('#F3D68F', 0.5)
   ctx.fill()
 
   // mountains
-  drawMountains(ctx, w, h, h * 0.62, hexToRgba('#A9DFF0', 0.55), h * 0.09)
-  drawMountains(ctx, w, h, h * 0.68, hexToRgba('#9DBB72', 0.8), h * 0.07)
+  drawMountains(ctx, w, h, h * 0.62, hexToRgba('#DCEAF1', 0.55), h * 0.09)
+  drawMountains(ctx, w, h, h * 0.68, hexToRgba('#A7BB82', 0.8), h * 0.07)
 
   // ground band
   ctx.fillStyle = hexToRgba(config.accent, 0.12)

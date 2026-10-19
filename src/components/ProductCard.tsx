@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
           style={{ backgroundColor: `${product.accent}18` }}
         >
           {character ? (
-            <AnimalIcon animal={character.animal} className="w-14 h-14" lineColor={product.accent} bodyColor="#FFFEFA" />
+            <AnimalIcon animal={character.animal} className="w-14 h-14" lineColor={product.accent} bodyColor="#FFFDF9" />
           ) : Icon ? (
             <Icon size={36} style={{ color: product.accent }} />
           ) : (

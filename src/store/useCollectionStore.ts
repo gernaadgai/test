@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import { COLLECTIONS } from '../data/collections'
 import { CHARACTERS } from '../data/characters'
 import { GAMES } from '../data/games'
+import { WORLD_DISCOVERIES } from '../data/discoveries'
 
 interface CollectionState {
   collectorName: string
@@ -13,6 +14,9 @@ interface CollectionState {
   earnedBadgeIds: string[]
   naadgaiPoints: number
   duplicates: Record<string, number>
+  /** ids from data/discoveries.ts — things the child has found in the world or inside the ger */
+  discoveredIds: string[]
+  gerQuestDone: boolean
 
   unlockCharacter: (characterId: string) => { newBadges: string[]; completedCollectionId: string | null }
   receiveDuplicate: (characterId: string) => void
@@ -20,6 +24,8 @@ interface CollectionState {
   completeStory: (storyId: string) => { newBadges: string[] }
   completeGame: (gameId: string) => { newBadges: string[] }
   spendPoints: (amount: number) => boolean
+  discover: (id: string) => { isNew: boolean; newBadges: string[] }
+  completeGerQuest: () => { isNew: boolean; newBadges: string[] }
   setProfile: (name: string, avatar: string) => void
   resetProgress: () => void
 }
@@ -41,6 +47,8 @@ const initial = {
   earnedBadgeIds: [] as string[],
   naadgaiPoints: 0,
   duplicates: {} as Record<string, number>,
+  discoveredIds: [] as string[],
+  gerQuestDone: false,
 }
 
 export const useCollectionStore = create<CollectionState>()(
@@ -133,6 +141,34 @@ export const useCollectionStore = create<CollectionState>()(
         if (state.naadgaiPoints < amount) return false
         set({ naadgaiPoints: state.naadgaiPoints - amount })
         return true
+      },
+
+      discover: (id) => {
+        const state = get()
+        if (state.discoveredIds.includes(id)) return { isNew: false, newBadges: [] }
+        const next = [...state.discoveredIds, id]
+        const newBadges: string[] = []
+        const worldFound = WORLD_DISCOVERIES.filter((d) => next.includes(d.id)).length
+        if (worldFound === WORLD_DISCOVERIES.length && !state.earnedBadgeIds.includes('badge-explorer')) {
+          newBadges.push('badge-explorer')
+        }
+        set({
+          discoveredIds: next,
+          earnedBadgeIds: Array.from(new Set([...state.earnedBadgeIds, ...newBadges])),
+        })
+        return { isNew: true, newBadges }
+      },
+
+      completeGerQuest: () => {
+        const state = get()
+        if (state.gerQuestDone) return { isNew: false, newBadges: [] }
+        const newBadges = state.earnedBadgeIds.includes('badge-ger-keeper') ? [] : ['badge-ger-keeper']
+        set({
+          gerQuestDone: true,
+          earnedBadgeIds: Array.from(new Set([...state.earnedBadgeIds, ...newBadges])),
+          naadgaiPoints: state.naadgaiPoints + POINTS.game,
+        })
+        return { isNew: true, newBadges }
       },
 
       setProfile: (name, avatar) => set({ collectorName: name, avatar }),

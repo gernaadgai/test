@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { NavigationBar } from './components/NavigationBar'
-import { HeroWorld } from './components/HeroWorld'
 import { HomeScreen } from './screens/HomeScreen'
+import { GerScreen } from './screens/GerScreen'
 import { CollectionScreen } from './screens/CollectionScreen'
 import { CharacterDetailScreen } from './screens/CharacterDetailScreen'
 import { PlayScreen } from './screens/PlayScreen'
@@ -24,7 +23,7 @@ import { WalletScreen } from './screens/WalletScreen'
 import { ParentDashboardScreen } from './screens/ParentDashboardScreen'
 import { GalleryScreen } from './screens/GalleryScreen'
 
-const TAB_PATHS = new Set(['/', '/collection', '/play', '/stories', '/journey', '/profile', '/market'])
+const TAB_PATHS = new Set(['/', '/ger', '/collection', '/play', '/scan', '/stories', '/journey', '/profile', '/market'])
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -35,14 +34,15 @@ function AnimatedRoutes() {
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
           className={showNav ? 'pb-24' : ''}
         >
           <Routes location={location}>
             <Route path="/" element={<HomeScreen />} />
+            <Route path="/ger" element={<GerScreen />} />
             <Route path="/collection" element={<CollectionScreen />} />
             <Route path="/collection/:id" element={<CharacterDetailScreen />} />
             <Route path="/play" element={<PlayScreen />} />
@@ -70,28 +70,13 @@ function AnimatedRoutes() {
   )
 }
 
-const HERO_SEEN_KEY = 'ger-naadgai-entered'
-
 function App() {
-  const [entered, setEntered] = useState(() => sessionStorage.getItem(HERO_SEEN_KEY) === '1')
-
   return (
     <MotionConfig reducedMotion="user">
       <HashRouter>
         <div className="app-shell">
           <AnimatedRoutes />
         </div>
-        <AnimatePresence>
-          {!entered && (
-            <HeroWorld
-              key="hero"
-              onEnter={() => {
-                sessionStorage.setItem(HERO_SEEN_KEY, '1')
-                setEntered(true)
-              }}
-            />
-          )}
-        </AnimatePresence>
       </HashRouter>
     </MotionConfig>
   )

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { X, ScanLine, PartyPopper, Sparkles, Check, ChevronRight } from 'lucide-react'
+import { X, ScanLine, PartyPopper, Sparkles, Check, ChevronRight, KeyRound, TriangleAlert, Info } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { AnimalIcon } from '../components/AnimalIcon'
 import { CharacterBuddy } from '../components/CharacterBuddy'
@@ -32,6 +32,8 @@ export function ScanScreen() {
   const [completedCollection, setCompletedCollection] = useState<string | null>(null)
   const [duplicateAdded, setDuplicateAdded] = useState(false)
   const [discovered, setDiscovered] = useState(false)
+  const [code, setCode] = useState('')
+  const [codeMsg, setCodeMsg] = useState<{ kind: 'invalid' | 'used'; text: string } | null>(null)
 
   const character = CHARACTERS.find((c) => c.id === targetId)
   const collection = character ? getCollection(character.collectionId) : undefined
@@ -58,6 +60,29 @@ export function ScanScreen() {
       setPhase('revealed')
       sound.unlock()
     }, 1600)
+  }
+
+  /** Demo redemption: a typed code stands in for the camera scanning the QR on a physical box. */
+  function redeemCode() {
+    const normalized = code.trim().toUpperCase().replace(/\s+/g, '')
+    if (!normalized) {
+      setCodeMsg({ kind: 'invalid', text: 'Эхлээд хайрцаг доторх кодоо бичээрэй.' })
+      return
+    }
+    const match = CHARACTERS.find((c) => c.qrCode === normalized)
+    if (!match) {
+      sound.pop()
+      setCodeMsg({ kind: 'invalid', text: 'Энэ код олдсонгүй. Хайрцаг доторх кодыг дахин шалгаад үзээрэй.' })
+      return
+    }
+    if (unlockedIds.includes(match.id)) {
+      sound.pop()
+      setCodeMsg({ kind: 'used', text: `${match.nameMn} аль хэдийн цуглуулгад байна. Нэг код зөвхөн нэг удаа ашиглагдана.` })
+      return
+    }
+    setCodeMsg(null)
+    setTargetId(match.id)
+    startScan()
   }
 
   function addToCollection() {
@@ -107,10 +132,64 @@ export function ScanScreen() {
       <div className="flex-1 px-5 mt-4">
         {phase === 'pick' && (
           <div>
-            <p className="text-sm font-medium text-ink-soft/70 mb-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                redeemCode()
+              }}
+              className="mb-6 rounded-3xl border border-forest/10 bg-paper p-4 shadow-[var(--shadow-card)]"
+            >
+              <label htmlFor="redeem-code" className="flex items-center gap-2 text-sm font-extrabold text-forest">
+                <KeyRound size={18} /> Хайрцгийн кодоо оруул
+              </label>
+              <div className="mt-3 flex gap-2">
+                <input
+                  id="redeem-code"
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value)
+                    if (codeMsg) setCodeMsg(null)
+                  }}
+                  autoCapitalize="characters"
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={16}
+                  placeholder="GN-FT-01"
+                  aria-describedby="redeem-msg"
+                  className="min-w-0 flex-1 rounded-2xl border-2 border-forest/15 bg-cream px-4 py-3 text-base font-bold uppercase tracking-wider text-ink outline-none placeholder:text-ink-soft/40 focus:border-forest"
+                />
+                <button
+                  type="submit"
+                  className="rounded-2xl bg-forest px-5 text-sm font-extrabold text-cream shadow-[var(--shadow-card)] transition-transform active:scale-[0.96]"
+                >
+                  Нээх
+                </button>
+              </div>
+              <div id="redeem-msg" aria-live="polite" className="min-h-0">
+                {codeMsg && (
+                  <p
+                    className={`mt-3 flex items-start gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold leading-snug ${
+                      codeMsg.kind === 'invalid' ? 'bg-terracotta/10 text-terracotta-dark' : 'bg-gold/20 text-forest'
+                    }`}
+                  >
+                    {codeMsg.kind === 'invalid' ? <TriangleAlert size={16} className="mt-px shrink-0" /> : <Info size={16} className="mt-px shrink-0" />}
+                    {codeMsg.text}
+                  </p>
+                )}
+              </div>
+              <p className="mt-3 text-[11px] font-medium leading-snug text-ink-soft">
+                Демо: камер холбогдоогүй тул код бичиж туршина. Жишээ нь{' '}
+                <button type="button" onClick={() => setCode('GN-FT-03')} className="font-extrabold text-forest underline underline-offset-2">
+                  GN-FT-03
+                </button>
+                .
+              </p>
+            </form>
+
+            <p className="text-sm font-medium text-ink-soft mb-3">
               {isDuplicateRun
                 ? 'Бүх цуглуулга олдлоо! Дахин скандаж шинэ хайрцгаас халтаас олохыг туршиж үзье:'
-                : 'Загвар туршилт — аль физик QR кодыг скандах вэ?'}
+                : 'Эсвэл демо сонго — аль физик QR кодыг скандах вэ?'}
             </p>
             <div className="grid grid-cols-3 gap-3 mb-6">
               {pickList.map((c) => (
@@ -121,7 +200,7 @@ export function ScanScreen() {
                     targetId === c.id ? 'border-terracotta bg-terracotta/10' : 'border-forest/10 bg-paper'
                   }`}
                 >
-                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FFF9ED" />
+                  <AnimalIcon animal={c.animal} className="w-10 h-10" lineColor={c.accent} bodyColor="#FAF8F1" />
                   <span className="text-[10px] font-bold text-center leading-tight">{c.nameMn}</span>
                 </button>
               ))}
@@ -159,9 +238,9 @@ export function ScanScreen() {
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 18 }}
             className="relative rounded-[28px] overflow-hidden border-2"
-            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFEFA 55%)` }}
+            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFDF9 55%)` }}
           >
-            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E7B85C', '#FFFEFA']} />}
+            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E8BB62', '#FFFDF9']} />}
 
             <div className="flex items-center justify-between px-6 pt-5">
               <span className="font-display font-extrabold text-xs tracking-wide text-forest">GER NAADGAI</span>
@@ -324,12 +403,12 @@ function CompletionCelebration({ collectionId, onDone }: { collectionId: string;
       <div className="w-full flex flex-col gap-3 mt-6">
         <ShareButton
           variant="solid"
-          accent="#B85C45"
+          accent="#C45A3C"
           label="Амжилтаа Хуваалц"
           config={
             {
               kind: 'collection-complete',
-              accent: '#B85C45',
+              accent: '#C45A3C',
               badgeMn: 'Цуглуулга бүрдлээ',
               titleMn: collection.completionReward.titleMn,
               titleEn: collection.completionReward.titleEn,

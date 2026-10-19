@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-const COLORS = ['#B85C45', '#E7B85C', '#9DBB72', '#D2836F', '#6DB8D4']
+const COLORS = ['#C45A3C', '#E8BB62', '#A7BB82', '#D9806A', '#B7D6E5']
 
 interface Props {
   count?: number
