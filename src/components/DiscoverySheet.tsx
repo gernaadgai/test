@@ -27,7 +27,7 @@ export function DiscoverySheet({ item, isNew, onClose, children }: Props) {
   }, [item, onClose])
 
   const art = item?.art ? getIllustration(item.art) : undefined
-  const bg = getIllustration('background')
+  const bg = getIllustration('world-scene')
 
   return (
     <AnimatePresence>
@@ -86,7 +86,7 @@ export function DiscoverySheet({ item, isNew, onClose, children }: Props) {
                 style={{
                   backgroundColor: 'var(--color-sky-light)',
                   backgroundImage: !art && bg ? `url(${bg})` : undefined,
-                  backgroundSize: '320% auto',
+                  backgroundSize: '300% auto',
                   backgroundPosition: item.bgPos,
                 }}
               >

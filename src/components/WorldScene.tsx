@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { getIllustration } from '../lib/illustrations'
 
@@ -10,453 +10,273 @@ interface Props {
   entering: boolean
 }
 
-type Layout = 'mobile' | 'desktop'
+/** The painting's own coordinate space. Every hotspot below is measured on world-scene.webp. */
+const IMG_W = 848
+const IMG_H = 1264
+const IMG_ASPECT = IMG_W / IMG_H
 
-interface ArtItem {
-  id: string
-  art: string
-  aspect: number // width / height of the artwork
-  x: number
-  y: number
-  w: number
-  flip?: boolean
-}
-
-interface FeatureSpot {
-  id: string
-  label: string
-  cx: number
-  cy: number
-  r: number
-}
-
-interface LayoutConfig {
-  viewBox: [number, number]
-  ger: { x: number; y: number; scale: number }
-  girl: { x: number; y: number; scale: number }
-  boy: { x: number; y: number; scale: number }
-  animals: ArtItem[]
-  eagle: { x: number; y: number; w: number }
-  features: FeatureSpot[]
-  clouds: Array<{ x: number; y: number; s: number; dur: number; range: number }>
-  sun: { x: number; y: number; r: number }
-}
-
-const CONFIG: Record<Layout, LayoutConfig> = {
-  mobile: {
-    viewBox: [400, 700],
-    ger: { x: 200, y: 268, scale: 1.55 },
-    girl: { x: 100, y: 340, scale: 1 },
-    boy: { x: 276, y: 344, scale: 1 },
-    animals: [
-      { id: 'world-horse', art: 'horse-hero', aspect: 1.167, x: 206, y: 424, w: 120 },
-      { id: 'world-dog', art: 'dog', aspect: 0.847, x: 140, y: 414, w: 54 },
-      { id: 'world-sheep', art: 'sheep', aspect: 0.959, x: 18, y: 432, w: 78 },
-    ],
-    eagle: { x: 252, y: 118, w: 88 },
-    features: [
-      { id: 'world-river', label: 'Гол', cx: 366, cy: 440, r: 26 },
-      { id: 'world-mountains', label: 'Уул', cx: 72, cy: 282, r: 34 },
-    ],
-    clouds: [
-      { x: 70, y: 150, s: 1, dur: 28, range: 22 },
-      { x: 300, y: 205, s: 0.7, dur: 22, range: 16 },
-    ],
-    sun: { x: 335, y: 80, r: 64 },
-  },
-  desktop: {
-    viewBox: [1200, 675],
-    ger: { x: 600, y: 290, scale: 2.1 },
-    girl: { x: 410, y: 401, scale: 1.35 },
-    boy: { x: 762, y: 407, scale: 1.35 },
-    animals: [
-      { id: 'world-horse', art: 'horse-hero', aspect: 1.167, x: 826, y: 452, w: 190 },
-      { id: 'world-dog', art: 'dog', aspect: 0.847, x: 500, y: 498, w: 88 },
-      { id: 'world-sheep', art: 'sheep', aspect: 0.959, x: 200, y: 486, w: 118 },
-    ],
-    eagle: { x: 700, y: 96, w: 130 },
-    features: [
-      { id: 'world-river', label: 'Гол', cx: 640, cy: 478, r: 38 },
-      { id: 'world-mountains', label: 'Уул', cx: 235, cy: 345, r: 44 },
-    ],
-    clouds: [
-      { x: 230, y: 140, s: 1.2, dur: 34, range: 30 },
-      { x: 930, y: 190, s: 0.9, dur: 26, range: 24 },
-    ],
-    sun: { x: 1040, y: 90, r: 90 },
-  },
-}
-
-const LABEL: Record<string, string> = {
-  'world-horse': 'Адуу — товшиж нээ',
-  'world-dog': 'Нохой — товшиж нээ',
-  'world-sheep': 'Хонь — товшиж нээ',
-  'world-eagle': 'Бүргэд — товшиж нээ',
-  'world-river': 'Гол — товшиж нээ',
-  'world-mountains': 'Уул — товшиж нээ',
-}
-
-const SPARKLE = 'M0 -9 L2.6 -2.6 L9 0 L2.6 2.6 L0 9 L-2.6 2.6 L-9 0 L-2.6 -2.6 Z'
-
-/** A tappable thing in the world: invisible generous hit area + a gentle "tap me" sparkle until found. */
-function Hotspot({
-  id,
-  label,
-  x,
-  y,
-  w,
-  h,
-  found,
-  onSelect,
-  children,
-  reduceMotion,
-}: {
+interface Spot {
   id: string
   label: string
   x: number
   y: number
   w: number
   h: number
-  found: boolean
-  onSelect: (id: string) => void
-  children?: React.ReactNode
-  reduceMotion: boolean
-}) {
-  // never let a touch target fall under ~48 world units
-  const hw = Math.max(w, 48)
-  const hh = Math.max(h, 48)
-  const hx = x - (hw - w) / 2
-  const hy = y - (hh - h) / 2
-  return (
-    <g
-      role="button"
-      tabIndex={0}
-      aria-label={label}
-      className="group cursor-pointer outline-none"
-      onClick={() => onSelect(id)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onSelect(id)
-        }
-      }}
-    >
-      {children}
-      <rect
-        x={hx - 4}
-        y={hy - 4}
-        width={hw + 8}
-        height={hh + 8}
-        rx={14}
-        fill="transparent"
-        stroke="var(--color-deepblue)"
-        strokeWidth={3}
-        className="opacity-0 group-focus-visible:opacity-100"
-      />
-      <rect x={hx} y={hy} width={hw} height={hh} fill="transparent" />
-      <g transform={`translate(${hx + hw - 6}, ${hy + 10})`}>
-        {found ? (
-          <>
-            <circle r={10} fill="var(--color-forest)" stroke="var(--color-paper)" strokeWidth={2} />
-            <path d="M-4.5 0.5 L-1.5 3.5 L4.5 -3" fill="none" stroke="var(--color-paper)" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-          </>
-        ) : (
-          <motion.path
-            d={SPARKLE}
-            fill="var(--color-gold)"
-            stroke="var(--color-paper)"
-            strokeWidth={1.4}
-            strokeLinejoin="round"
-            animate={reduceMotion ? undefined : { scale: [0.8, 1.15, 0.8], opacity: [0.55, 1, 0.55] }}
-            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        )}
-      </g>
-      <title>{label}</title>
-    </g>
-  )
 }
+
+const SPOTS: Spot[] = [
+  { id: 'world-eagle', label: 'Бүргэд — товшиж нээ', x: 180, y: 165, w: 135, h: 140 },
+  { id: 'world-mountains', label: 'Уул — товшиж нээ', x: 0, y: 495, w: 330, h: 95 },
+  { id: 'world-river', label: 'Гол — товшиж нээ', x: 0, y: 612, w: 225, h: 80 },
+  { id: 'world-sheep', label: 'Хонь — товшиж нээ', x: 32, y: 705, w: 215, h: 220 },
+  { id: 'world-horse', label: 'Адуу — товшиж нээ', x: 606, y: 668, w: 232, h: 215 },
+  { id: 'world-shagai', label: 'Шагай — товшиж нээ', x: 365, y: 985, w: 150, h: 85 },
+  { id: 'world-dog', label: 'Нохой — товшиж нээ', x: 592, y: 940, w: 210, h: 140 },
+]
+
+/** where the ger sits — the camera pushes in toward the door, and the door glows */
+const GER = { x: 190, y: 515, w: 472, h: 310 }
+const DOOR = { x: 355, y: 658, w: 142, h: 166 }
+const CHIMNEY = { x: 404, y: 470 }
+
+/** The painting's real top and bottom edge colours — the tall-phone extension continues them seamlessly. */
+const SKY_EDGE = 'linear-gradient(to right, #71ABD6 0%, #70AAD5 25%, #7CB4DA 50%, #84BADC 75%, #87BDDD 100%)'
+const GRASS_EDGE = 'linear-gradient(to right, #204124 0%, #38572E 25%, #547A3B 50%, #577C3B 75%, #5C7F44 100%)'
+
+const SPARKLE = 'M0 -9 L2.6 -2.6 L9 0 L2.6 2.6 L0 9 L-2.6 2.6 L-9 0 L-2.6 -2.6 Z'
 
 export function WorldScene({ discoveredIds, onSelect, onEnterGer, entering }: Props) {
   const reduceMotion = !!useReducedMotion()
-  const [layout, setLayout] = useState<Layout>(() => (typeof window !== 'undefined' && window.innerWidth >= 768 ? 'desktop' : 'mobile'))
-  const [parallax, setParallax] = useState({ x: 0, y: 0 })
-  const raf = useRef(0)
+  const art = getIllustration('world-scene')
+  const [vp, setVp] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }))
 
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)')
-    const update = () => setLayout(mq.matches ? 'desktop' : 'mobile')
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
+    const onResize = () => setVp({ w: window.innerWidth, h: window.innerHeight })
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  // very small pointer parallax, fine pointers only
-  useEffect(() => {
-    if (reduceMotion || !window.matchMedia('(pointer: fine)').matches) return
-    const move = (e: PointerEvent) => {
-      cancelAnimationFrame(raf.current)
-      raf.current = requestAnimationFrame(() =>
-        setParallax({ x: (e.clientX / window.innerWidth - 0.5) * 2, y: (e.clientY / window.innerHeight - 0.5) * 2 }),
-      )
-    }
-    window.addEventListener('pointermove', move)
-    return () => {
-      window.removeEventListener('pointermove', move)
-      cancelAnimationFrame(raf.current)
-    }
-  }, [reduceMotion])
+  if (!art) return null
 
-  const cfg = CONFIG[layout]
-  const [vw, vh] = cfg.viewBox
-  const bg = getIllustration('background')
-  const gerArt = getIllustration('ger')
-  const girlArt = getIllustration('girl')
-  const boyArt = getIllustration('boy')
-  const eagleArt = getIllustration('eagle')
-  const par = (f: number) => (reduceMotion ? undefined : `translate(${(parallax.x * f).toFixed(2)} ${(parallax.y * f * 0.5).toFixed(2)})`)
+  // Fit the whole painting (nothing important is ever cropped), then continue the sky above
+  // and the grass below with soft mirrored copies so the screen is always filled.
+  const narrow = vp.w / vp.h < IMG_ASPECT
+  const w = narrow ? vp.w : vp.h * IMG_ASPECT
+  const h = w / IMG_ASPECT
+  const left = (vp.w - w) / 2
+  const extra = Math.max(0, vp.h - h)
+  const top = extra * 0.42 // a little more sky than grass — the HUD lives in the sky
+  const k = w / IMG_W // image units -> screen px
+  const px = (n: number) => n / k // n screen px, expressed in image units
   const found = (id: string) => discoveredIds.includes(id)
 
+  const doorCx = left + (DOOR.x + DOOR.w / 2) * k
+  const doorCy = top + (DOOR.y + DOOR.h / 2) * k
+
   return (
-    <svg
-      viewBox={`0 0 ${vw} ${vh}`}
-      preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 h-full w-full"
-      role="group"
-      aria-label="Монголын тал нутаг — товшиж судал"
+    <motion.div
+      className="absolute inset-0 overflow-hidden"
+      style={{ transformOrigin: `${doorCx}px ${doorCy}px`, backgroundColor: '#8FB9E3' }}
+      animate={entering && !reduceMotion ? { scale: 1.45 } : { scale: 1 }}
+      transition={{ duration: 0.75, ease: [0.45, 0, 0.35, 1] }}
     >
-      <defs>
-        <radialGradient id="ws-sun">
-          <stop offset="0%" stopColor="#F3D68F" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#F3D68F" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="ws-door">
-          <stop offset="0%" stopColor="#FFE3A3" stopOpacity="1" />
-          <stop offset="70%" stopColor="#E8BB62" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#C45A3C" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="ws-glow">
-          <stop offset="0%" stopColor="#F3D68F" stopOpacity="0.7" />
-          <stop offset="100%" stopColor="#F3D68F" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="ws-haze" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FAF8F1" stopOpacity="0" />
-          <stop offset="100%" stopColor="#FAF8F1" stopOpacity="0.28" />
-        </linearGradient>
-      </defs>
+      {/* blurred surround for wide screens */}
+      {!narrow && <img src={art} alt="" aria-hidden className="absolute inset-0 h-full w-full scale-110 object-cover opacity-90 blur-2xl" />}
 
-      {/* sky + landscape */}
-      <g transform={par(-5)}>
-        {bg && <image href={bg} x={-14} y={-8} width={vw + 28} height={vh + 16} preserveAspectRatio="xMidYMid slice" />}
-      </g>
-
-      {/* natural morning light — a slow glow, never a flare */}
-      <motion.circle
-        cx={cfg.sun.x}
-        cy={cfg.sun.y}
-        r={cfg.sun.r * 2.2}
-        fill="url(#ws-sun)"
-        animate={reduceMotion ? undefined : { opacity: [0.65, 1, 0.65] }}
-        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* drifting clouds in front of the painted sky */}
-      <g transform={par(8)}>
-        {cfg.clouds.map((c, i) => (
-          <motion.g
-            key={i}
-            transform={`translate(${c.x} ${c.y}) scale(${c.s})`}
-            animate={reduceMotion ? undefined : { x: [0, c.range, 0] }}
-            transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut' }}
-            opacity={0.88}
-          >
-            <ellipse cx={0} cy={0} rx={34} ry={14} fill="#FFFDF9" />
-            <ellipse cx={24} cy={-6} rx={22} ry={12} fill="#FFFDF9" />
-            <ellipse cx={-22} cy={4} rx={20} ry={10} fill="#FFFDF9" />
-          </motion.g>
-        ))}
-      </g>
-
-      {/* an occasional bird pair crossing the sky */}
-      {!reduceMotion && (
-        <motion.g
-          initial={{ x: -60, opacity: 0 }}
-          animate={{ x: vw + 60, opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 30, repeat: Infinity, repeatDelay: 18, ease: 'linear' }}
-        >
-          <g transform={`translate(0 ${vh * 0.24})`}>
-            <path d="M0 0 Q5 -6 10 0 Q15 -6 20 0" stroke="var(--color-ink-soft)" strokeWidth={1.8} fill="none" strokeLinecap="round" />
-            <path d="M18 9 Q22 4 26 9 Q30 4 34 9" stroke="var(--color-ink-soft)" strokeWidth={1.5} fill="none" strokeLinecap="round" opacity={0.7} />
-          </g>
-        </motion.g>
+      {/* sky and grass continue past the painting on tall phones, in the painting's own edge colours */}
+      {narrow && extra > 0 && (
+        <>
+          <div className="absolute inset-x-0 top-0" style={{ height: top + h * 0.06, background: SKY_EDGE }} aria-hidden />
+          <div className="absolute inset-x-0 bottom-0" style={{ height: vp.h - (top + h) + h * 0.06, background: GRASS_EDGE }} aria-hidden />
+        </>
       )}
 
-      {/* eagle — circles high above, tap to meet it */}
-      {eagleArt && (
-        <g transform={par(5)}>
-          <motion.g
-            animate={reduceMotion ? undefined : { x: [0, 26, 0, -26, 0], y: [0, -8, 0, 8, 0] }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Hotspot
-              id="world-eagle"
-              label={LABEL['world-eagle']}
-              x={cfg.eagle.x}
-              y={cfg.eagle.y}
-              w={cfg.eagle.w}
-              h={cfg.eagle.w * 0.97}
-              found={found('world-eagle')}
-              onSelect={onSelect}
-              reduceMotion={reduceMotion}
+      <div
+        className="absolute"
+        style={{
+          left,
+          top,
+          width: w,
+          height: h,
+          // soften the painting's top and bottom edge into the extension so there is no seam
+          maskImage: narrow && extra > 0 ? 'linear-gradient(to bottom, transparent 0%, #000 6%, #000 94%, transparent 100%)' : undefined,
+          WebkitMaskImage: narrow && extra > 0 ? 'linear-gradient(to bottom, transparent 0%, #000 6%, #000 94%, transparent 100%)' : undefined,
+        }}
+      >
+        <svg viewBox={`0 0 ${IMG_W} ${IMG_H}`} className="absolute inset-0 h-full w-full overflow-visible" role="group" aria-label="Монголын тал нутаг — товшиж судал">
+          <defs>
+            <radialGradient id="ws-sun">
+              <stop offset="0%" stopColor="#FFF1C2" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#FFF1C2" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="ws-door">
+              <stop offset="0%" stopColor="#FFE9B0" stopOpacity="1" />
+              <stop offset="65%" stopColor="#E8BB62" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#C45A3C" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
+          <image href={art} x={0} y={0} width={IMG_W} height={IMG_H} />
+
+          {/* morning light breathes very slowly from the upper right */}
+          <motion.circle
+            cx={760}
+            cy={160}
+            r={420}
+            fill="url(#ws-sun)"
+            style={{ mixBlendMode: 'soft-light' }}
+            animate={reduceMotion ? { opacity: 0.6 } : { opacity: [0.35, 0.8, 0.35] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            pointerEvents="none"
+          />
+
+          {/* a bird pair crossing now and then */}
+          {!reduceMotion && (
+            <motion.g
+              initial={{ x: -80, opacity: 0 }}
+              animate={{ x: IMG_W + 80, opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 34, repeat: Infinity, repeatDelay: 20, ease: 'linear' }}
+              pointerEvents="none"
             >
-              <image href={eagleArt} x={cfg.eagle.x} y={cfg.eagle.y} width={cfg.eagle.w} height={cfg.eagle.w * 0.97} />
-            </Hotspot>
-          </motion.g>
-        </g>
-      )}
+              <g transform="translate(0 330) scale(1.6)">
+                <path d="M0 0 Q5 -6 10 0 Q15 -6 20 0" stroke="#3a4a52" strokeWidth={1.8} fill="none" strokeLinecap="round" />
+                <path d="M18 9 Q22 4 26 9 Q30 4 34 9" stroke="#3a4a52" strokeWidth={1.5} fill="none" strokeLinecap="round" opacity={0.7} />
+              </g>
+            </motion.g>
+          )}
 
-      {/* landscape features: invisible, but marked with the same sparkle */}
-      {cfg.features.map((f) => (
-        <Hotspot
-          key={f.id}
-          id={f.id}
-          label={LABEL[f.id]}
-          x={f.cx - f.r}
-          y={f.cy - f.r}
-          w={f.r * 2}
-          h={f.r * 2}
-          found={found(f.id)}
-          onSelect={onSelect}
-          reduceMotion={reduceMotion}
-        />
-      ))}
-
-      {/* ground contact shadows keep everything feeling placed on the grass */}
-      <g transform={par(12)}>
-        <ellipse cx={cfg.ger.x} cy={cfg.ger.y + 90 * cfg.ger.scale} rx={88 * cfg.ger.scale} ry={10 * cfg.ger.scale} fill="#183F35" opacity={0.16} />
-
-        {/* THE GER — the door of the whole game */}
-        <g role="button" tabIndex={0} aria-label="Гэр рүү ор" className="group cursor-pointer outline-none"
-          onClick={onEnterGer}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              onEnterGer()
-            }
-          }}
-          transform={`translate(${cfg.ger.x} ${cfg.ger.y}) scale(${cfg.ger.scale})`}
-        >
-          <motion.g
-            style={{ transformOrigin: '0px 100px' }}
-            animate={entering ? { scale: 1.1 } : { scale: 1 }}
-            whileHover={entering || reduceMotion ? undefined : { scale: 1.025 }}
-            whileTap={entering ? undefined : { scale: 0.985 }}
-            transition={{ duration: entering ? 0.55 : 0.25, ease: 'easeOut' }}
-          >
-            {/* warm glow wakes up on hover / tap */}
-            <motion.ellipse
-              cx={0}
-              cy={40}
-              rx={120}
-              ry={90}
-              fill="url(#ws-glow)"
-              initial={{ opacity: 0.25 }}
-              animate={{ opacity: entering ? 1 : reduceMotion ? 0.25 : [0.2, 0.42, 0.2] }}
-              transition={{ duration: entering ? 0.4 : 4.4, repeat: entering ? 0 : Infinity, ease: 'easeInOut' }}
+          {/* chimney smoke */}
+          {!reduceMotion && (
+            <motion.path
+              d={`M${CHIMNEY.x} ${CHIMNEY.y} q18 -26 0 -54 q-16 -28 6 -58`}
+              fill="none"
+              stroke="#FFFFFF"
+              strokeWidth={9}
+              strokeLinecap="round"
+              animate={{ y: [6, -34, 6], opacity: [0, 0.5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeOut' }}
+              pointerEvents="none"
             />
-            {/* chimney smoke */}
-            {!reduceMotion && (
-              <motion.path
-                d="M-2 -14 Q8 -30 -2 -44 Q-12 -58 0 -74"
+          )}
+
+          {/* animals, the children's shagai, river, mountains: tap to discover */}
+          {SPOTS.map((s) => {
+            const isFound = found(s.id)
+            const minHit = px(52)
+            const hw = Math.max(s.w, minHit)
+            const hh = Math.max(s.h, minHit)
+            const hx = s.x - (hw - s.w) / 2
+            const hy = s.y - (hh - s.h) / 2
+            const mx = hx + hw / 2
+            const my = hy + Math.min(14 + px(10), hh / 2)
+            return (
+              <g
+                key={s.id}
+                role="button"
+                tabIndex={0}
+                aria-label={s.label}
+                className="group cursor-pointer outline-none"
+                onClick={() => onSelect(s.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onSelect(s.id)
+                  }
+                }}
+              >
+                <rect x={hx} y={hy} width={hw} height={hh} rx={px(14)} fill="transparent" />
+                <rect
+                  x={hx - 4}
+                  y={hy - 4}
+                  width={hw + 8}
+                  height={hh + 8}
+                  rx={px(16)}
+                  fill="none"
+                  stroke="#435A8C"
+                  strokeWidth={px(3)}
+                  className="opacity-0 group-focus-visible:opacity-100"
+                />
+                <g transform={`translate(${mx} ${my}) scale(${px(1)})`}>
+                  {isFound ? (
+                    <>
+                      <circle r={11} fill="#183F35" stroke="#FFFDF9" strokeWidth={2.2} />
+                      <path d="M-4.6 0.6 L-1.6 3.6 L4.8 -3.2" fill="none" stroke="#FFFDF9" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+                    </>
+                  ) : (
+                    <motion.path
+                      d={SPARKLE}
+                      transform="scale(1.35)"
+                      fill="#E8BB62"
+                      stroke="#FFFDF9"
+                      strokeWidth={1.3}
+                      strokeLinejoin="round"
+                      animate={reduceMotion ? undefined : { scale: [1.15, 1.6, 1.15], opacity: [0.65, 1, 0.65] }}
+                      transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  )}
+                </g>
+                <title>{s.label}</title>
+              </g>
+            )
+          })}
+
+          {/* THE GER — the door of the whole game */}
+          <g
+            role="button"
+            tabIndex={0}
+            aria-label="Гэр рүү ор"
+            className="group cursor-pointer outline-none"
+            onClick={onEnterGer}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onEnterGer()
+              }
+            }}
+          >
+            <motion.rect
+              x={DOOR.x}
+              y={DOOR.y}
+              width={DOOR.w}
+              height={DOOR.h}
+              rx={10}
+              fill="url(#ws-door)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: entering ? 1 : 0 }}
+              transition={{ duration: 0.45, delay: entering ? 0.1 : 0 }}
+              pointerEvents="none"
+            />
+            {/* a quiet pulse on the door says "this is the way in" */}
+            {!entering && !reduceMotion && (
+              <motion.rect
+                x={DOOR.x - 6}
+                y={DOOR.y - 6}
+                width={DOOR.w + 12}
+                height={DOOR.h + 12}
+                rx={14}
                 fill="none"
-                stroke="#FFFDF9"
+                stroke="#FFE9B0"
                 strokeWidth={5}
-                strokeLinecap="round"
-                animate={{ y: [4, -22, 4], opacity: [0, 0.6, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeOut' }}
+                animate={{ opacity: [0, 0.75, 0] }}
+                transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+                pointerEvents="none"
               />
             )}
-            {gerArt && <image href={gerArt} x={-92} y={-98} width={184} height={198} preserveAspectRatio="xMidYMax meet" />}
-            {/* the door lights up and "opens" as the child steps in */}
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: entering ? 1 : 0 }} transition={{ duration: 0.45, delay: entering ? 0.15 : 0 }}>
-              <rect x={-14.5} y={26} width={28.5} height={58} rx={3} fill="url(#ws-door)" />
-            </motion.g>
-            <rect x={-96} y={-60} width={192} height={160} rx={30} fill="transparent" stroke="var(--color-deepblue)" strokeWidth={2.5} className="opacity-0 group-focus-visible:opacity-100" />
-            <rect x={-96} y={-60} width={192} height={160} fill="transparent" />
-          </motion.g>
-        </g>
-
-        {/* the two children, close to the ger */}
-        {girlArt && (
-          <g transform={`translate(${cfg.girl.x} ${cfg.girl.y}) scale(${cfg.girl.scale})`}>
-            <ellipse cx={0} cy={88} rx={22} ry={4.5} fill="#183F35" opacity={0.15} />
-            <motion.g animate={reduceMotion ? undefined : { y: [0, -2.5, 0] }} transition={{ duration: 3.1, repeat: Infinity, ease: 'easeInOut' }}>
-              <image href={girlArt} x={-34} y={-14} width={68} height={104} preserveAspectRatio="xMidYMax meet" />
-            </motion.g>
+            <rect
+              x={GER.x}
+              y={GER.y}
+              width={GER.w}
+              height={GER.h}
+              rx={30}
+              fill="none"
+              stroke="#435A8C"
+              strokeWidth={px(3)}
+              className="opacity-0 group-focus-visible:opacity-100"
+            />
+            <rect x={GER.x} y={GER.y} width={GER.w} height={GER.h} fill="transparent" />
           </g>
-        )}
-        {boyArt && (
-          <g transform={`translate(${cfg.boy.x} ${cfg.boy.y}) scale(${cfg.boy.scale})`}>
-            <ellipse cx={0} cy={88} rx={22} ry={4.5} fill="#183F35" opacity={0.15} />
-            <motion.g animate={reduceMotion ? undefined : { y: [0, -2.5, 0] }} transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}>
-              <image href={boyArt} x={-34} y={-14} width={68} height={104} preserveAspectRatio="xMidYMax meet" />
-            </motion.g>
-          </g>
-        )}
-
-        {/* animals */}
-        {cfg.animals.map((a, i) => {
-          const src = getIllustration(a.art)
-          if (!src) return null
-          const h = a.w / a.aspect
-          return (
-            <Hotspot
-              key={a.id}
-              id={a.id}
-              label={LABEL[a.id]}
-              x={a.x}
-              y={a.y}
-              w={a.w}
-              h={h}
-              found={found(a.id)}
-              onSelect={onSelect}
-              reduceMotion={reduceMotion}
-            >
-              <ellipse cx={a.x + a.w / 2} cy={a.y + h - 2} rx={a.w * 0.36} ry={a.w * 0.05} fill="#183F35" opacity={0.18} />
-              <motion.g
-                style={{ transformOrigin: `${a.x + a.w / 2}px ${a.y + h}px` }}
-                animate={reduceMotion ? undefined : { scaleY: [1, 1.018, 1] }}
-                transition={{ duration: 3.2 + i * 0.5, repeat: Infinity, ease: 'easeInOut' }}
-                whileTap={{ scale: 1.06 }}
-              >
-                <image href={src} x={a.x} y={a.y} width={a.w} height={h} />
-              </motion.g>
-            </Hotspot>
-          )
-        })}
-      </g>
-
-      {/* soft atmospheric haze + foreground grass in front of everything */}
-      <rect x={0} y={vh * 0.55} width={vw} height={vh * 0.45} fill="url(#ws-haze)" pointerEvents="none" />
-      <g transform={par(18)} pointerEvents="none">
-        {Array.from({ length: Math.round(vw / 46) }, (_, i) => {
-          const x = (vw / Math.round(vw / 46)) * i + 12
-          const y = vh - 20 - (i % 4) * 9
-          return (
-            <motion.g
-              key={i}
-              transform={`translate(${x} ${y})`}
-              animate={reduceMotion ? undefined : { rotate: [-5, 5, -5] }}
-              transition={{ duration: 3 + (i % 4) * 0.35, repeat: Infinity, ease: 'easeInOut', delay: i * 0.12 }}
-              style={{ transformOrigin: '0px 14px' }}
-            >
-              <path d="M0 14 Q-4 3 -2 -12 M0 14 Q0 0 0 -16 M0 14 Q4 3 2 -12" stroke="#183F35" strokeWidth={2} strokeLinecap="round" fill="none" opacity={0.5} />
-              {i % 3 === 0 && <circle cx={0} cy={-17} r={3} fill="#E8BB62" />}
-              {i % 5 === 2 && <circle cx={0} cy={-17} r={3} fill="#FAF8F1" />}
-            </motion.g>
-          )
-        })}
-      </g>
-    </svg>
+        </svg>
+      </div>
+    </motion.div>
   )
 }

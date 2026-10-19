@@ -7,7 +7,7 @@ export interface Discovery {
   factEn: string
   /** key in src/assets/illustrations (animals) — absent for landscape features */
   art?: string
-  /** CSS background-position into the world background, for landscape features without art */
+  /** CSS background-position into the world painting, for landscape features without art */
   bgPos?: string
   kind: 'animal' | 'landscape' | 'object'
 }
@@ -50,9 +50,18 @@ export const WORLD_DISCOVERIES: Discovery[] = [
     factEn: 'A loyal helper who watches over the ger and the herd.',
   },
   {
+    id: 'world-shagai',
+    kind: 'object',
+    art: 'shagai',
+    nameMn: 'ШАГАЙ',
+    nameEn: 'Shagai',
+    factMn: 'Шагай бол хонины шагай яс. Монгол хүүхдүүд шагайгаар олон янзын тоглоом тоглодог.',
+    factEn: 'Shagai are sheep ankle bones. Mongolian children play many different games with them.',
+  },
+  {
     id: 'world-river',
     kind: 'landscape',
-    bgPos: '72% 66%',
+    bgPos: '8% 51%',
     nameMn: 'ГОЛ',
     nameEn: 'River',
     factMn: 'Гол горхи тал нутгийг усаар хангана. Мал сүрэг голын эрэг дагаж бэлчдэг.',
@@ -61,7 +70,7 @@ export const WORLD_DISCOVERIES: Discovery[] = [
   {
     id: 'world-mountains',
     kind: 'landscape',
-    bgPos: '22% 38%',
+    bgPos: '10% 43%',
     nameMn: 'УУЛ',
     nameEn: 'Mountains',
     factMn: 'Алс холын уулс талыг тойрон зогсдог. Монголд Хангай, Алтай зэрэг олон сайхан уул бий.',
