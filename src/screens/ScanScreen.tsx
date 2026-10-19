@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { X, ScanLine, PartyPopper, Sparkles, Check, ChevronRight, KeyRound, TriangleAlert, Info } from 'lucide-react'
+import { X, ScanLine, PartyPopper, Check, ChevronRight, KeyRound, TriangleAlert, Info } from 'lucide-react'
 import { ScreenHeader } from '../components/ScreenHeader'
 import { AnimalIcon } from '../components/AnimalIcon'
-import { CharacterBuddy } from '../components/CharacterBuddy'
+import { RevealStage } from '../components/RevealStage'
 import { ConfettiBurst } from '../components/ConfettiBurst'
 import { CHARACTERS } from '../data/characters'
 import { getCollection } from '../data/collections'
@@ -233,130 +233,67 @@ export function ScanScreen() {
         )}
 
         {phase === 'revealed' && character && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotateY: -25 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-            className="relative rounded-[28px] overflow-hidden border-2"
-            style={{ borderColor: `${character.accent}35`, background: `linear-gradient(180deg, ${character.accent}1a, #FFFDF9 55%)` }}
+          <RevealStage
+            character={character}
+            collectionName={collection?.nameMn}
+            headline={isDuplicateRun ? 'Энэ аль хэдийн байна!' : isSpecial ? 'Онцгой нээлт!' : 'Шинэ нээлт!'}
+            added={discovered && !isDuplicateRun}
+            showFact={!isDuplicateRun}
           >
-            {!duplicateAdded && !discovered && <ConfettiBurst colors={[character.accent, '#E8BB62', '#FFFDF9']} />}
-
-            <div className="flex items-center justify-between px-6 pt-5">
-              <span className="font-display font-extrabold text-xs tracking-wide text-forest">GER NAADGAI</span>
-              {discovered && !isDuplicateRun && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.6 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-[10px] font-bold uppercase tracking-wide text-forest flex items-center gap-1"
-                >
-                  ✦ НЭЭГДЛЭЭ ✦
-                </motion.span>
-              )}
-            </div>
-
-            <div className="flex flex-col items-center text-center px-8 pt-2 pb-8">
-              <motion.p
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-xs font-bold uppercase tracking-[0.16em] text-terracotta flex items-center gap-1.5 mt-2"
-              >
-                <Sparkles size={14} />{' '}
-                {isDuplicateRun
-                  ? 'ЭНЭ АЛЬ ХЭДИЙН БАЙНА!'
-                  : character.rarity === 'legendary' || character.rarity === 'rare'
-                    ? 'ОНЦГОЙ НЭЭЛТ!'
-                    : 'ШИНЭ НЭЭЛТ!'}
-              </motion.p>
-              <motion.div
-                initial={{ scale: 0, rotate: -20 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.15, type: 'spring', stiffness: 200 }}
-                className="w-32 h-32 rounded-full flex items-center justify-center my-4 border-4"
-                style={{ backgroundColor: `${character.accent}22`, borderColor: `${character.accent}30` }}
-              >
-                <CharacterBuddy
-                  animal={character.animal}
-                  state={discovered || duplicateAdded ? 'celebrating' : isDuplicateRun ? 'idle' : 'excited'}
-                  size={104}
-                  lineColor={character.accent}
-                />
-              </motion.div>
-              <h2 className="font-display font-extrabold text-2xl" style={{ color: character.accent }}>{character.nameMn}</h2>
-              <p className="text-xs text-ink-soft/50">{character.nameEn}</p>
-              <p className="text-xs font-bold text-ink-soft/60 mt-2 uppercase tracking-wide">
-                {collection?.nameMn} · #{String(character.number).padStart(2, '0')}
-              </p>
-
-              {!isDuplicateRun && (
-                <div className="rounded-xl bg-gold/12 px-4 py-3 mt-4">
-                  <p className="text-xs text-ink-soft/70 italic leading-relaxed">"{character.factMn}"</p>
-                </div>
-              )}
-              {isDuplicateRun && (
-                <p className="text-xs font-medium text-ink-soft/60 mt-2 max-w-[220px]">Халтаас хувь — үлдээж болно, эсвэл NAADGAI оноогоор солино.</p>
-              )}
-
-              {isDuplicateRun ? (
-                <div className="w-full mt-6">
-                  {duplicateAdded ? (
-                    <button
-                      onClick={() => navigate('/market/exchange')}
-                      className="w-full rounded-2xl bg-terracotta text-cream font-display font-extrabold py-4 shadow-[var(--shadow-pop)] active:scale-[0.98] transition-transform"
-                    >
-                      ХАЛТААС СОЛИЛЦОХ →
-                    </button>
-                  ) : (
-                    <button
-                      onClick={addToCollection}
-                      className="w-full rounded-2xl bg-forest text-cream font-display font-extrabold py-4 shadow-[var(--shadow-pop)] active:scale-[0.98] transition-transform"
-                    >
-                      ХАЛТААСАНД НЭМЭХ
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="w-full mt-6 flex flex-col gap-2.5">
-                  <div className="flex gap-2.5">
-                    <button
-                      onClick={addToCollection}
-                      disabled={discovered}
-                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-2xl py-4 font-display font-extrabold text-sm shadow-[var(--shadow-pop)] transition-transform ${
-                        discovered ? 'bg-forest/20 text-forest cursor-default' : 'bg-forest text-cream active:scale-[0.98]'
-                      }`}
-                    >
-                      {discovered ? (
-                        <>
-                          <Check size={16} /> НЭЭГДСЭН
-                        </>
-                      ) : (
-                        'ЦУГЛУУЛГАДАА НЭМЭХ'
-                      )}
-                    </button>
-                    {discoveryShareConfig && (
-                      <div className="flex-1">
-                        <ShareButton
-                          variant="solid"
-                          accent={character.accent}
-                          label="ХУВААЛЦАХ"
-                          className="w-full !py-4"
-                          config={discoveryShareConfig}
-                        />
-                      </div>
+            {isDuplicateRun ? (
+              <div className="flex flex-col gap-3">
+                <p className="mx-auto max-w-[240px] text-xs font-medium text-ink-soft">Халтаас хувь — үлдээж болно, эсвэл NAADGAI оноогоор солино.</p>
+                {duplicateAdded ? (
+                  <button
+                    onClick={() => navigate('/market/exchange')}
+                    className="w-full rounded-2xl bg-terracotta py-4 font-display text-sm font-extrabold text-cream shadow-[var(--shadow-pop)] transition-transform active:scale-[0.97]"
+                  >
+                    ХАЛТААС СОЛИЛЦОХ →
+                  </button>
+                ) : (
+                  <button
+                    onClick={addToCollection}
+                    className="w-full rounded-2xl bg-forest py-4 font-display text-sm font-extrabold text-cream shadow-[var(--shadow-pop)] transition-transform active:scale-[0.97]"
+                  >
+                    ХАЛТААСАНД НЭМЭХ
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex gap-2.5">
+                  <button
+                    onClick={addToCollection}
+                    disabled={discovered}
+                    className={`flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-4 font-display text-sm font-extrabold shadow-[var(--shadow-pop)] transition-transform ${
+                      discovered ? 'cursor-default bg-forest/15 text-forest' : 'bg-forest text-cream active:scale-[0.97]'
+                    }`}
+                  >
+                    {discovered ? (
+                      <>
+                        <Check size={16} /> НЭЭГДСЭН
+                      </>
+                    ) : (
+                      'ЦУГЛУУЛГАДАА НЭМЭХ'
                     )}
-                  </div>
-                  {discovered && (
-                    <button
-                      onClick={() => navigate(`/collection/${character.id}`)}
-                      className="w-full flex items-center justify-center gap-1 text-xs font-bold text-forest/70 py-1.5"
-                    >
-                      Дүрээ харах <ChevronRight size={13} />
-                    </button>
+                  </button>
+                  {discoveryShareConfig && (
+                    <div className="flex-1">
+                      <ShareButton variant="solid" accent={character.accent} label="ХУВААЛЦАХ" className="w-full !py-4" config={discoveryShareConfig} />
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
-          </motion.div>
+                {discovered && (
+                  <button
+                    onClick={() => navigate(`/collection/${character.id}`)}
+                    className="flex w-full items-center justify-center gap-1 py-2 text-xs font-extrabold text-forest"
+                  >
+                    Дүрээ харах <ChevronRight size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+          </RevealStage>
         )}
 
         {phase === 'complete' && completedCollection && (
