@@ -120,7 +120,7 @@ export function CharacterDetailScreen() {
               transition={{ type: 'spring', stiffness: 180, damping: 16 }}
               className="absolute inset-x-[4%] bottom-[5%] top-[10%]"
             >
-              <CharacterArt animal={character.animal} interactive onReact={greet} className="h-full w-full" />
+              <CharacterArt animal={character.animal} artKey={character.id} interactive onReact={greet} className="h-full w-full" />
             </motion.div>
           </div>
 

@@ -70,7 +70,7 @@ export function CollectibleCard({ character, unlocked, index = 0, featured = fal
           className="absolute inset-x-[8%] bottom-[10%] top-[12%]"
           style={unlocked ? undefined : { filter: 'grayscale(0.85) blur(2.5px) brightness(1.05)', opacity: 0.5 }}
         >
-          <CharacterArt animal={character.animal} className="h-full w-full" phase={(index % 5) * 0.55} />
+          <CharacterArt animal={character.animal} artKey={character.id} className="h-full w-full" phase={(index % 5) * 0.55} />
         </div>
 
         {!unlocked && (

@@ -66,6 +66,8 @@ export type CharacterMood = 'idle' | 'celebrate'
 
 interface Props {
   animal: AnimalId
+  /** the character id — lets a special edition (e.g. sheep-2027) use its own artwork, falling back to the animal's */
+  artKey?: string
   className?: string
   /** make it respond to a tap (detail view); cards leave this off */
   interactive?: boolean
@@ -76,9 +78,9 @@ interface Props {
   phase?: number
 }
 
-export function CharacterArt({ animal, className, interactive = false, mood = 'idle', onReact, phase = 0 }: Props) {
+export function CharacterArt({ animal, artKey, className, interactive = false, mood = 'idle', onReact, phase = 0 }: Props) {
   const reduceMotion = !!useReducedMotion()
-  const art = getIllustration(animal)
+  const art = (artKey && getIllustration(artKey)) || getIllustration(animal)
   const p = PERSONALITY[animal] ?? FALLBACK
   const [reactKey, setReactKey] = useState(0)
   const reacting = reactKey > 0

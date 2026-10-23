@@ -54,7 +54,7 @@ export function CollectionScreen() {
                     }}
                   >
                     <span className="block h-[78%] w-[78%]" style={has ? undefined : { filter: 'grayscale(1) brightness(1.7)', opacity: 0.35 }}>
-                      <CharacterArt animal={c.animal} className="h-full w-full" />
+                      <CharacterArt animal={c.animal} artKey={c.id} className="h-full w-full" />
                     </span>
                   </span>
                   <span className={`text-[10px] font-bold tracking-wide ${has ? 'text-cream' : 'text-cream/45'}`}>{has ? c.nameMn : '???'}</span>

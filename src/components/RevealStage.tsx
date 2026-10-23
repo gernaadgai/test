@@ -147,7 +147,7 @@ export function RevealStage({ character, collectionName, headline, added, showFa
               }
               transition={{ y: { type: 'spring', stiffness: 170, damping: 13 }, opacity: { duration: 0.25 }, scaleY: { duration: 0.5, delay: 0.32 } }}
             >
-              <CharacterArt animal={character.animal} mood={added ? 'celebrate' : 'idle'} className="h-full w-full" />
+              <CharacterArt animal={character.animal} artKey={character.id} mood={added ? 'celebrate' : 'idle'} className="h-full w-full" />
             </motion.div>
           </div>
 
