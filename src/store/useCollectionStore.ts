@@ -4,6 +4,7 @@ import { COLLECTIONS } from '../data/collections'
 import { CHARACTERS } from '../data/characters'
 import { GAMES } from '../data/games'
 import { WORLD_DISCOVERIES } from '../data/discoveries'
+import { SEEK_SCENES } from '../data/seek'
 
 interface CollectionState {
   collectorName: string
@@ -17,6 +18,8 @@ interface CollectionState {
   /** ids from data/discoveries.ts — things the child has found in the world or inside the ger */
   discoveredIds: string[]
   gerQuestDone: boolean
+  /** best star rating (1–3) per seek-and-find scene */
+  seekStars: Record<string, number>
 
   unlockCharacter: (characterId: string) => { newBadges: string[]; completedCollectionId: string | null }
   receiveDuplicate: (characterId: string) => void
@@ -25,7 +28,7 @@ interface CollectionState {
   completeGame: (gameId: string) => { newBadges: string[] }
   spendPoints: (amount: number) => boolean
   discover: (id: string) => { isNew: boolean; newBadges: string[] }
-  completeGerQuest: () => { isNew: boolean; newBadges: string[] }
+  completeSeek: (sceneId: string, stars: number) => { firstTime: boolean; newBadges: string[] }
   setProfile: (name: string, avatar: string) => void
   resetProgress: () => void
 }
@@ -49,6 +52,7 @@ const initial = {
   duplicates: {} as Record<string, number>,
   discoveredIds: [] as string[],
   gerQuestDone: false,
+  seekStars: {} as Record<string, number>,
 }
 
 export const useCollectionStore = create<CollectionState>()(
@@ -159,16 +163,26 @@ export const useCollectionStore = create<CollectionState>()(
         return { isNew: true, newBadges }
       },
 
-      completeGerQuest: () => {
+      completeSeek: (sceneId, stars) => {
         const state = get()
-        if (state.gerQuestDone) return { isNew: false, newBadges: [] }
-        const newBadges = state.earnedBadgeIds.includes('badge-ger-keeper') ? [] : ['badge-ger-keeper']
+        const prev = state.seekStars[sceneId] ?? 0
+        const firstTime = prev === 0
+        const seekStars = { ...state.seekStars, [sceneId]: Math.max(prev, stars) }
+        const newBadges: string[] = []
+        const earn = (id: string) => {
+          if (!state.earnedBadgeIds.includes(id) && !newBadges.includes(id)) newBadges.push(id)
+        }
+        if (firstTime) earn('badge-seeker')
+        if (sceneId === 'ger' && firstTime) earn('badge-ger-keeper')
+        if (Object.values(seekStars).filter((n) => n >= 3).length >= 3) earn('badge-sharp-eye')
+        if (SEEK_SCENES.every((sc) => (seekStars[sc.id] ?? 0) > 0)) earn('badge-seek-master')
         set({
-          gerQuestDone: true,
+          seekStars,
+          gerQuestDone: state.gerQuestDone || sceneId === 'ger',
           earnedBadgeIds: Array.from(new Set([...state.earnedBadgeIds, ...newBadges])),
-          naadgaiPoints: state.naadgaiPoints + POINTS.game,
+          naadgaiPoints: state.naadgaiPoints + (firstTime ? POINTS.game : 0),
         })
-        return { isNew: true, newBadges }
+        return { firstTime, newBadges }
       },
 
       setProfile: (name, avatar) => set({ collectorName: name, avatar }),

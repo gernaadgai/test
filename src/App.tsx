@@ -22,8 +22,10 @@ import { ExchangeScreen } from './screens/ExchangeScreen'
 import { WalletScreen } from './screens/WalletScreen'
 import { ParentDashboardScreen } from './screens/ParentDashboardScreen'
 import { GalleryScreen } from './screens/GalleryScreen'
+import { SeekHubScreen } from './screens/SeekHubScreen'
+import { SeekGameScreen } from './screens/SeekGameScreen'
 
-const TAB_PATHS = new Set(['/', '/ger', '/collection', '/play', '/scan', '/stories', '/journey', '/profile', '/market'])
+const TAB_PATHS = new Set(['/', '/ger', '/collection', '/play', '/seek', '/scan', '/stories', '/journey', '/profile', '/market'])
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -46,6 +48,8 @@ function AnimatedRoutes() {
             <Route path="/collection" element={<CollectionScreen />} />
             <Route path="/collection/:id" element={<CharacterDetailScreen />} />
             <Route path="/play" element={<PlayScreen />} />
+            <Route path="/seek" element={<SeekHubScreen />} />
+            <Route path="/seek/:sceneId" element={<SeekGameScreen />} />
             <Route path="/play/quiz" element={<QuizScreen />} />
             <Route path="/play/:id" element={<MiniGameScreen />} />
             <Route path="/stories" element={<StoriesScreen />} />

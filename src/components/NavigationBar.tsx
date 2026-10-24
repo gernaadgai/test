@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Mountain, Tent, LayoutGrid, Gamepad2, ScanLine } from 'lucide-react'
 import { sound } from '../lib/sound'
 import { useTranslate } from '../i18n/useTranslate'
@@ -15,6 +15,7 @@ const TABS: Array<{ to: string; key: DictKey; icon: typeof Mountain }> = [
 /** A light floating dock — five places, one icon family, never covers the story art. */
 export function NavigationBar() {
   const t = useTranslate()
+  const { pathname } = useLocation()
   return (
     <nav
       aria-label="Үндсэн цэс"
@@ -29,7 +30,7 @@ export function NavigationBar() {
               onClick={() => sound.tap()}
               className={({ isActive }) =>
                 `flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-[20px] py-1.5 transition-colors ${
-                  isActive ? 'bg-forest text-cream' : 'text-ink-soft hover:text-forest'
+                  isActive || (to === '/play' && pathname.startsWith('/seek')) ? 'bg-forest text-cream' : 'text-ink-soft hover:text-forest'
                 }`
               }
             >

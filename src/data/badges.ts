@@ -8,6 +8,9 @@ export const BADGES: Badge[] = [
   { id: 'badge-year-keeper', nameMn: 'ЖИЛИЙН ЭЗЭН', nameEn: 'Year Keeper', icon: '🐑', description: 'Collected the 2027 annual zodiac special edition.' },
   { id: 'badge-explorer', nameMn: 'СУДЛААЧ', nameEn: 'Explorer', icon: '🧭', description: 'Discovered everything in the Mongolian world.' },
   { id: 'badge-ger-keeper', nameMn: 'ГЭРИЙН ЭЗЭН', nameEn: 'Ger Keeper', icon: '🏕', description: 'Found every treasure hidden inside the ger.' },
+  { id: 'badge-seeker', nameMn: 'ХАЙГЧ', nameEn: 'Seeker', icon: '🔍', description: 'Finished your first seek-and-find scene.' },
+  { id: 'badge-sharp-eye', nameMn: 'ХҮЧИРХЭГ НҮД', nameEn: 'Sharp Eye', icon: '👁', description: 'Earned three stars in three different scenes.' },
+  { id: 'badge-seek-master', nameMn: 'ХАЙЖ ОЛОХ ЭЗЭН', nameEn: 'Seek Master', icon: '🧭', description: 'Finished every seek-and-find scene.' },
   { id: 'badge-journey', nameMn: '12 ЖИЛИЙН АЯЛАГЧ', nameEn: '12-Year Journey', icon: '🌟', description: 'Complete the entire zodiac cycle across 12 years.' },
 ]
 
